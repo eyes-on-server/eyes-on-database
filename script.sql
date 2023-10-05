@@ -147,7 +147,9 @@ INSERT INTO Eyes_On_Server.Medida VALUES
 (NULL, "PorcentagemUso", "%"),
 (NULL, "tamanhoGigaBytes", "Gb"),
 (NULL, "Frequencia", "Hz"),
-(NULL, "Latencia", "ms");
+(NULL, "Latencia", "ms"),
+(NULL, "bytesEnviados", "B"),
+(NULL, "bytesRecebidos", "B");
 
 -- ------------------- Selects -------------------
 
