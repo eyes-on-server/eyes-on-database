@@ -127,11 +127,12 @@ INSERT INTO Eyes_On_Server.Login VALUES
 
 -- Tabela Servidor
 INSERT INTO Eyes_On_Server.Servidor VALUES
-(NULL, 1, "F34AD", "Setor F5", ":db8:3333:4444:5555:6666:7777:8888", "Linux"),
-(NULL, 1, "A27FF", "Setor F5", ":db8:3F3F:AB12:5059:1123:9565:1841", "Linux"),
-(NULL, 2, "95OAA", "Setor G4", ":db8:924D:AABB:DAC2:6546:1112:9456", "Windows"),
-(NULL, 3, "LLAV4", "Setor A2", ":db8:AAA2:CAA2:123D:94DD:099C:12EE", "Linux"),
-(NULL, 3, "AF944", "Setor B6", ":db8:AAAA:BBBB:CCCC:DDDD:EEEE:FFFF", "Linux");
+(NULL, 3, "Maquina Danilo", "Setor F5", ":db8:3333:4444:5555:6666:7777:8888", "Windows"),
+(NULL, 3, "Maquina Davi", "Setor F5", ":db8:3F3F:AB12:5059:1123:9565:1841", "Windows"),
+(NULL, 3, "Maquina Felipe", "Setor G4", ":db8:924D:AABB:DAC2:6546:1112:9456", "Linux"),
+(NULL, 3, "Maquina Isabela", "Setor G4", ":db8:ACF3:CBBC:DA32:1548:19A2:FF56", "Windows"),
+(NULL, 3, "Maquina Otavio", "Setor A2", ":db8:AAA2:CAA2:123D:94DD:099C:12EE", "Windows"),
+(NULL, 3, "Maquina Paulo", "Setor B6", ":db8:AAAA:BBBB:CCCC:DDDD:EEEE:FFFF", "Windows");
 
 -- Tabela Componente
 INSERT INTO Eyes_On_Server.Componente VALUES
@@ -147,15 +148,6 @@ INSERT INTO Eyes_On_Server.Medida VALUES
 (NULL, "tamanhoGigaBytes", "Gb"),
 (NULL, "Frequencia", "Hz"),
 (NULL, "Latencia", "ms");
-
--- Tabela Registro
-INSERT INTO Eyes_On_Server.Registro VALUES
-(NULL, 1, 2, 1, 95, now()),
-(NULL, 2, 2, 2, 100, now()),
-(NULL, 4, 5, 3, 150, now()),
-(NULL, 3, 3, 3, 6000, now()),
-(NULL, 1, 4, 4, 1432, now()),
-(NULL, 2, 3, 4, 8, now());
 
 -- ------------------- Selects -------------------
 
@@ -212,8 +204,8 @@ FROM Eyes_On_Server.Registro r
     join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor
 ORDER BY Servidor;
 
--- View Servidor 1
-CREATE OR REPLACE VIEW View_Registros_Servidor_1 AS
+-- View Máquina Danilo
+CREATE OR REPLACE VIEW View_Registros_Servidor_Danilo AS
 (SELECT
 	s.id_servidor `Servidor`,
     r.momento_registro `Momento`,
@@ -226,31 +218,75 @@ FROM Eyes_On_Server.Registro r
     join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor and r.fk_servidor = 1
 ORDER BY Momento);
 
--- ------------------- Statement -------------------
-SET @sql = NULL;
+-- View Máquina Davi
+CREATE OR REPLACE VIEW View_Registros_Servidor_Davi AS
+(SELECT
+	s.id_servidor `Servidor`,
+    r.momento_registro `Momento`,
+    r.valor_registro `Valor`,
+    c.nome_componente `Componente`,
+    m.nome_medida `Medida`
+FROM Eyes_On_Server.Registro r
+	join Eyes_On_Server.Componente c on c.id_componente = r.fk_componente
+	join Eyes_On_Server.Medida m on m.id_medida = r.fk_medida
+    join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor and r.fk_servidor = 2
+ORDER BY Momento);
 
-SELECT
-  GROUP_CONCAT(DISTINCT
-    CONCAT(
-      'max(case when Componente = ''', 
-      Componente, 
-      ''' and Medida = ''', 
-      Medida, 
-      ''' then Valor end) ',
-      Componente,Medida
-    )
-  )
-INTO @sql
-FROM
-  View_Registros;
+-- View Máquina Felipe
+CREATE OR REPLACE VIEW View_Registros_Servidor_Felipe AS
+(SELECT
+	s.id_servidor `Servidor`,
+    r.momento_registro `Momento`,
+    r.valor_registro `Valor`,
+    c.nome_componente `Componente`,
+    m.nome_medida `Medida`
+FROM Eyes_On_Server.Registro r
+	join Eyes_On_Server.Componente c on c.id_componente = r.fk_componente
+	join Eyes_On_Server.Medida m on m.id_medida = r.fk_medida
+    join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor and r.fk_servidor = 3
+ORDER BY Momento);
 
-SET @sql = CONCAT('SELECT Servidor, Momento, ', @sql, '
-FROM View_Registros
-GROUP BY Servidor, Momento'); 
+-- View Máquina Isabela
+CREATE OR REPLACE VIEW View_Registros_Servidor_Isabela AS
+(SELECT
+	s.id_servidor `Servidor`,
+    r.momento_registro `Momento`,
+    r.valor_registro `Valor`,
+    c.nome_componente `Componente`,
+    m.nome_medida `Medida`
+FROM Eyes_On_Server.Registro r
+	join Eyes_On_Server.Componente c on c.id_componente = r.fk_componente
+	join Eyes_On_Server.Medida m on m.id_medida = r.fk_medida
+    join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor and r.fk_servidor = 4
+ORDER BY Momento);
 
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
+-- View Máquina Otavio
+CREATE OR REPLACE VIEW View_Registros_Servidor_Otavio AS
+(SELECT
+	s.id_servidor `Servidor`,
+    r.momento_registro `Momento`,
+    r.valor_registro `Valor`,
+    c.nome_componente `Componente`,
+    m.nome_medida `Medida`
+FROM Eyes_On_Server.Registro r
+	join Eyes_On_Server.Componente c on c.id_componente = r.fk_componente
+	join Eyes_On_Server.Medida m on m.id_medida = r.fk_medida
+    join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor and r.fk_servidor = 5
+ORDER BY Momento);
+
+-- View Máquina Paulo
+CREATE OR REPLACE VIEW View_Registros_Servidor_Paulo AS
+(SELECT
+	s.id_servidor `Servidor`,
+    r.momento_registro `Momento`,
+    r.valor_registro `Valor`,
+    c.nome_componente `Componente`,
+    m.nome_medida `Medida`
+FROM Eyes_On_Server.Registro r
+	join Eyes_On_Server.Componente c on c.id_componente = r.fk_componente
+	join Eyes_On_Server.Medida m on m.id_medida = r.fk_medida
+    join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor and r.fk_servidor = 6
+ORDER BY Momento);
 
 -- ------------------- Procedures -------------------
 
@@ -278,3 +314,30 @@ INSERT INTO Eyes_On_Server.Login VALUES
 (NULL, (SELECT max(id_usuario) from Eyes_On_Server.Usuario), email_adm, senha);
 
 END $$
+
+-- ------------------- Statement -------------------
+SET @sql = NULL;
+
+SELECT
+  GROUP_CONCAT(DISTINCT
+    CONCAT(
+      'max(case when Componente = ''', 
+      Componente, 
+      ''' and Medida = ''', 
+      Medida, 
+      ''' then Valor end) ',
+      Componente,Medida
+    )
+  )
+INTO @sql
+FROM
+  View_Registros_Servidor_Davi;
+
+SET @sql = CONCAT('SELECT Servidor, Momento, ', @sql, '
+FROM View_Registros_Servidor_Davi
+GROUP BY Servidor, Momento
+ORDER BY Momento DESC'); 
+
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
