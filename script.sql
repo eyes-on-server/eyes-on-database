@@ -26,16 +26,20 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Usuario
 );
 
 -- Tabela Chamados
-CREATE TABLE IF NOT EXISTS Eyes_On_Server.Chamados
+CREATE TABLE IF NOT EXISTS Eyes_On_Server.Alertas
 (
-	id_chamados INT PRIMARY KEY AUTO_INCREMENT,
+	id_Alertas INT PRIMARY KEY AUTO_INCREMENT,
     fk_empresa INT,
-    titulo_chamado VARCHAR(120),
-    descricao_chamado TEXT,
+    titulo_Alerta VARCHAR(120),
+    descricao_Alerta TEXT,
     data_hora_abertura DATETIME,
-    status_chamado VARCHAR(60),
+    tipoAlerta int,
     FOREIGN KEY(fk_Empresa) REFERENCES Eyes_On_Server.Empresa(id_empresa)
 );
+-- Tipos de chamados: 
+-- 0: Prevenção 
+-- 1: Perigo
+-- 2: Emergencia 
 
 -- Tabela Login
 CREATE TABLE IF NOT EXISTS Eyes_On_Server.Login
@@ -105,16 +109,25 @@ INSERT INTO Eyes_On_Server.Usuario VALUES
 (NULL, 3, "Paulo Macena", 1, "pauloM@sptech.school"),
 (NULL, 3, "Otávio Walcovics", 0, "otavioW@sptech.school");
 
+
 -- Tabela Chamados
-INSERT INTO Eyes_On_Server.Chamados VALUES
-(NULL, 1, "Excesso de CPU", "O CPU atingiu 95% de uso!", now(), "Aberto"),
-(NULL, 1, "Excesso de Memória", "A memória está utilizando 100% da sua capacidade!", now(), "Fechado"),
-(NULL, 1, "Falha na Rede", "A rede do servidor está apresentando falhas!", now(), "Em Andamento"),
-(NULL, 2, "Excesso de CPU", "O CPU atingiu 95% de uso!", now(), "Aberto"),
-(NULL, 2, "Nova Conta no UCEAE", "Boa tarde! Gostaria de uma nova conta administrativa no sistema! Agradecido", now(), "Aberto"),
-(NULL, 3, "Site com Lentidão", "O site do UCEAE está apresentando lentidão!", now(), "Em Andamento"),
-(NULL, 3, "Necessário novo Componente", "Olá, para meu sistema, eu gostaria de poder ler dados da GPU!", now(), "Aberto"),
-(NULL, 3, "Nova Medida", "Para o novo componente que requisitei, gostaria de, além da porcentagem de uso, seja lido a frequência também!", now(), "Fechado");
+INSERT INTO Eyes_On_Server.Alertas VALUES
+(NULL, 1, "Excesso de CPU", "A CPU atingiu 75% de uso!", now(), 0),
+(NULL, 2, "Excesso de CPU", "A CPU atingiu 80% de uso!", now(), 1),
+(NULL, 3, "Excesso de CPU", "A CPU atingiu 90% de uso!", now(), 2),
+(NULL, 1, "Excesso de Memória", "A memória está utilizando 90% da sua capacidade!", now(), 2),
+(NULL, 1, "Excesso de Memória", "A memória está utilizando 80% da sua capacidade!", now(), 1),
+(NULL, 1, "Excesso de Memória", "A memória está utilizando 75% da sua capacidade!", now(), 0),
+(NULL, 1, "Falha na Rede", "A rede do servidor está apresentando falhas!", now(), 0);
+-- Tipos de chamados: 
+-- 0: Prevenção 
+-- 1: Perigo
+-- 2: Emergencia 
+
+
+
+
+
 
 -- Tabela Login
 INSERT INTO Eyes_On_Server.Login VALUES
@@ -161,6 +174,7 @@ SELECT * FROM Eyes_On_Server.Servidor;
 SELECT * FROM Eyes_On_Server.Componente;
 SELECT * FROM Eyes_On_Server.Medida;
 SELECT * FROM Eyes_On_Server.Registro;
+truncate Eyes_On_Server.Registro;
 
 -- ------------------- Joins -------------------
 
@@ -290,6 +304,8 @@ FROM Eyes_On_Server.Registro r
     join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor and r.fk_servidor = 6
 ORDER BY Momento);
 
+
+select * from View_Registros_Servidor_Paulo;
 -- ------------------- Procedures -------------------
 
 -- playground do paulo
@@ -333,10 +349,10 @@ SELECT
   )
 INTO @sql
 FROM
-  View_Registros_Servidor_Davi;
+  View_Registros_Servidor_paulo;
 
 SET @sql = CONCAT('SELECT Servidor, Momento, ', @sql, '
-FROM View_Registros_Servidor_Davi
+FROM View_Registros_Servidor_paulo
 GROUP BY Servidor, Momento
 ORDER BY Momento DESC'); 
 
