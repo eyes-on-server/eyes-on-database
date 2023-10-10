@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Servidor
     nome_servidor VARCHAR(120),
     local_servidor VARCHAR(120),
     ipv6_servidor VARCHAR(39),
-    mac_adress CHAR(17),
+    mac_address CHAR(17),
     so_servidor VARCHAR(120),
     FOREIGN KEY(fk_empresa) REFERENCES Eyes_On_Server.Empresa(id_empresa)
 );
