@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Servidor
     nome_servidor VARCHAR(120),
     local_servidor VARCHAR(120),
     ipv6_servidor VARCHAR(39),
+    mac_adress CHAR(17),
     so_servidor VARCHAR(120),
     FOREIGN KEY(fk_empresa) REFERENCES Eyes_On_Server.Empresa(id_empresa)
 );
@@ -124,12 +125,12 @@ INSERT INTO Eyes_On_Server.Login VALUES
 
 -- Tabela Servidor
 INSERT INTO Eyes_On_Server.Servidor VALUES
-(NULL, 3, "Maquina Danilo", "Setor F5", ":db8:3333:4444:5555:6666:7777:8888", "Windows"),
-(NULL, 3, "Maquina Davi", "Setor F5", ":db8:3F3F:AB12:5059:1123:9565:1841", "Windows"),
-(NULL, 3, "Maquina Felipe", "Setor G4", ":db8:924D:AABB:DAC2:6546:1112:9456", "Linux"),
-(NULL, 3, "Maquina Isabela", "Setor G4", ":db8:ACF3:CBBC:DA32:1548:19A2:FF56", "Windows"),
-(NULL, 3, "Maquina Otavio", "Setor A2", ":db8:AAA2:CAA2:123D:94DD:099C:12EE", "Windows"),
-(NULL, 3, "Maquina Paulo", "Setor B6", ":db8:AAAA:BBBB:CCCC:DDDD:EEEE:FFFF", "Windows");
+(NULL, 3, "Maquina Danilo", "Setor F5", ":db8:3333:4444:5555:6666:7777:8888", "00:1B:44:11:3A:B7", "Windows"),
+(NULL, 3, "Maquina Davi", "Setor F5", ":db8:3F3F:AB12:5059:1123:9565:1841", "09:11:44:1F:3A:A9", "Windows"),
+(NULL, 3, "Maquina Felipe", "Setor G4", ":db8:924D:AABB:DAC2:6546:1112:9456", "0B:AB:42:10:FE:BA", "Linux"),
+(NULL, 3, "Maquina Isabela", "Setor G4", ":db8:ACF3:CBBC:DA32:1548:19A2:FF56", "04:D3:CC:C1:12:54", "Windows"),
+(NULL, 3, "Maquina Otavio", "Setor A2", ":db8:AAA2:CAA2:123D:94DD:099C:12EE", "01:12:CA:FC:00:09", "Windows"),
+(NULL, 3, "Maquina Paulo", "Setor B6", ":db8:AAAA:BBBB:CCCC:DDDD:EEEE:FFFF", "FE:EA:81:00:3C:D2", "Windows");
 
 -- Tabela Componente
 INSERT INTO Eyes_On_Server.Componente VALUES
