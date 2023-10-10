@@ -25,22 +25,6 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Usuario
     FOREIGN KEY(fk_empresa) REFERENCES Eyes_On_Server.Empresa(id_empresa)
 );
 
--- Tabela Chamados
-CREATE TABLE IF NOT EXISTS Eyes_On_Server.Alertas
-(
-	id_Alertas INT PRIMARY KEY AUTO_INCREMENT,
-    fk_empresa INT,
-    titulo_Alerta VARCHAR(120),
-    descricao_Alerta TEXT,
-    data_hora_abertura DATETIME,
-    tipoAlerta int,
-    FOREIGN KEY(fk_Empresa) REFERENCES Eyes_On_Server.Empresa(id_empresa)
-);
--- Tipos de chamados: 
--- 0: Prevenção 
--- 1: Perigo
--- 2: Emergencia 
-
 -- Tabela Login
 CREATE TABLE IF NOT EXISTS Eyes_On_Server.Login
 (
@@ -92,6 +76,26 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Registro
     FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor)
 );
 
+-- Tabela Alertas
+CREATE TABLE IF NOT EXISTS Eyes_On_Server.Alertas
+(
+	id_alertas INT PRIMARY KEY AUTO_INCREMENT,
+    fk_empresa INT,
+    fk_servidor INT,
+    fk_componente INT,
+    titulo_alerta VARCHAR(120),
+    descricao_alerta TEXT,
+    data_hora_abertura DATETIME,
+    tipoAlerta INT CHECK(tipoAlerta in (0,1,2)),
+    FOREIGN KEY(fk_empresa) REFERENCES Eyes_On_Server.Empresa(id_empresa),
+    FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor),
+    FOREIGN KEY(fk_componente) REFERENCES Eyes_On_Server.Componente(id_componente)
+);
+-- Tipos de chamados: 
+-- 0: Prevenção 
+-- 1: Perigo
+-- 2: Emergencia 
+
 -- ------------------- Inserindo Dados -------------------
 
 -- Tabela Empresa
@@ -108,26 +112,6 @@ INSERT INTO Eyes_On_Server.Usuario VALUES
 (NULL, 2, "Gabriel Volpiani", 0, "gabrielV@etec.gov.br"),
 (NULL, 3, "Paulo Macena", 1, "pauloM@sptech.school"),
 (NULL, 3, "Otávio Walcovics", 0, "otavioW@sptech.school");
-
-
--- Tabela Chamados
-INSERT INTO Eyes_On_Server.Alertas VALUES
-(NULL, 1, "Excesso de CPU", "A CPU atingiu 75% de uso!", now(), 0),
-(NULL, 2, "Excesso de CPU", "A CPU atingiu 80% de uso!", now(), 1),
-(NULL, 3, "Excesso de CPU", "A CPU atingiu 90% de uso!", now(), 2),
-(NULL, 1, "Excesso de Memória", "A memória está utilizando 90% da sua capacidade!", now(), 2),
-(NULL, 1, "Excesso de Memória", "A memória está utilizando 80% da sua capacidade!", now(), 1),
-(NULL, 1, "Excesso de Memória", "A memória está utilizando 75% da sua capacidade!", now(), 0),
-(NULL, 1, "Falha na Rede", "A rede do servidor está apresentando falhas!", now(), 0);
--- Tipos de chamados: 
--- 0: Prevenção 
--- 1: Perigo
--- 2: Emergencia 
-
-
-
-
-
 
 -- Tabela Login
 INSERT INTO Eyes_On_Server.Login VALUES
@@ -168,13 +152,12 @@ INSERT INTO Eyes_On_Server.Medida VALUES
 
 SELECT * FROM Eyes_On_Server.Empresa;
 SELECT * FROM Eyes_On_Server.Usuario;
-SELECT * FROM Eyes_On_Server.Chamados;
+SELECT * FROM Eyes_On_Server.Alertas;
 SELECT * FROM Eyes_On_Server.Login;
 SELECT * FROM Eyes_On_Server.Servidor;
 SELECT * FROM Eyes_On_Server.Componente;
 SELECT * FROM Eyes_On_Server.Medida;
 SELECT * FROM Eyes_On_Server.Registro;
-truncate Eyes_On_Server.Registro;
 
 -- ------------------- Joins -------------------
 
