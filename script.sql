@@ -55,6 +55,18 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Componente
     nome_componente VARCHAR(120)
 );
 
+-- Tabela Processos
+CREATE TABLE IF NOT EXISTS Eyes_On_Server.Processos
+(
+	id_processos INT PRIMARY KEY AUTO_INCREMENT,
+    pid_processos BIGINT,
+    nome_processos VARCHAR(120),
+    uso_memoria_processos DECIMAL(4,1),
+    uso_cpu_processos DECIMAL(4,1),
+    fk_servidor INT,
+    FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor)
+);
+
 -- Tabela Medida
 CREATE TABLE IF NOT EXISTS Eyes_On_Server.Medida
 (
@@ -157,6 +169,7 @@ SELECT * FROM Eyes_On_Server.Alertas;
 SELECT * FROM Eyes_On_Server.Login;
 SELECT * FROM Eyes_On_Server.Servidor;
 SELECT * FROM Eyes_On_Server.Componente;
+SELECT * FROM Eyes_On_Server.Processos;
 SELECT * FROM Eyes_On_Server.Medida;
 SELECT * FROM Eyes_On_Server.Registro;
 
