@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Alertas
     titulo_alerta VARCHAR(120),
     descricao_alerta TEXT,
     data_hora_abertura DATETIME,
-    tipoAlerta INT CHECK(tipoAlerta in (0,1,2)),
+    tipoAlerta VARCHAR(10),
     FOREIGN KEY(fk_empresa) REFERENCES Eyes_On_Server.Empresa(id_empresa),
     FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor),
     FOREIGN KEY(fk_componente) REFERENCES Eyes_On_Server.Componente(id_componente)
