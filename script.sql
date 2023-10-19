@@ -38,13 +38,15 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Login
 -- Tabela Servidor
 CREATE TABLE IF NOT EXISTS Eyes_On_Server.Servidor
 (
-	id_servidor INT PRIMARY KEY AUTO_INCREMENT,
+    id_servidor INT PRIMARY KEY AUTO_INCREMENT,
     fk_empresa INT,
     nome_servidor VARCHAR(120),
     local_servidor VARCHAR(120),
     ipv6_servidor VARCHAR(39),
     mac_address CHAR(17),
     so_servidor VARCHAR(120),
+    descricao VARCHAR(50),
+    componentes VARCHAR(255), -- Coluna para armazenar IDs de componentes mudar no DER
     FOREIGN KEY(fk_empresa) REFERENCES Eyes_On_Server.Empresa(id_empresa)
 );
 
@@ -53,6 +55,22 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Componente
 (
 	id_componente INT PRIMARY KEY AUTO_INCREMENT,
     nome_componente VARCHAR(120)
+);
+-- teste concat
+-- select * from Eyes_On_Server.Componente;
+-- SELECT GROUP_CONCAT(nome_componente) AS Nomes_Componente
+-- FROM Eyes_On_Server.Componente;
+
+-- Tabela Processos
+CREATE TABLE IF NOT EXISTS Eyes_On_Server.Processos
+(
+	id_processos INT PRIMARY KEY AUTO_INCREMENT,
+    pid_processos BIGINT,
+    nome_processos VARCHAR(120),
+    uso_memoria_processos DECIMAL(4,1),
+    uso_cpu_processos DECIMAL(4,1),
+    fk_servidor INT,
+    FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor)
 );
 
 -- Tabela Processos
@@ -136,6 +154,7 @@ INSERT INTO Eyes_On_Server.Login VALUES
 (NULL, 6, "otavioW@sptech.school", "BJtP?vUdM4nFJZ@K");
 
 -- Tabela Servidor
+<<<<<<< Updated upstream
 INSERT INTO Eyes_On_Server.Servidor VALUES
 (NULL, 3, "Maquina Danilo", "Setor F5", ":db8:3333:4444:5555:6666:7777:8888", "00:1B:44:11:3A:B7", "Windows"),
 (NULL, 3, "Maquina Davi", "Setor F5", ":db8:3F3F:AB12:5059:1123:9565:1841", "09:11:44:1F:3A:A9", "Windows"),
@@ -143,6 +162,19 @@ INSERT INTO Eyes_On_Server.Servidor VALUES
 (NULL, 3, "Maquina Isabela", "Setor G4", ":db8:ACF3:CBBC:DA32:1548:19A2:FF56", "04:D3:CC:C1:12:54", "Windows"),
 (NULL, 3, "Maquina Otavio", "Setor A2", ":db8:AAA2:CAA2:123D:94DD:099C:12EE", "01:12:CA:FC:00:09", "Windows"),
 (NULL, 3, "Maquina Paulo", "Setor B6", ":db8:AAAA:BBBB:CCCC:DDDD:EEEE:FFFF", "FE:EA:81:00:3C:D2", "Windows");
+=======
+INSERT INTO Eyes_On_Server.Servidor
+    (fk_empresa, nome_servidor, local_servidor, ipv6_servidor, mac_address, so_servidor, descricao, componentes)
+VALUES
+    (3, "Maquina Danilo", "Setor F5", ":db8:3333:4444:5555:6666:7777:8888", "00:1B:44:11:3A:B7", "Windows", "aaaaa", "1,2,3"),
+    (3, "Maquina Davi", "Setor F5", ":db8:3F3F:AB12:5059:1123:9565:1841", "09:11:44:1F:3A:A9", "Windows", "aaaaa", "1,2,3,4"),
+    (3, "Maquina Felipe", "Setor G4", ":db8:924D:AABB:DAC2:6546:1112:9456", "0B:AB:42:10:FE:BA", "Linux", "aaaaa", "1,3"),
+    (3, "Maquina Isabela", "Setor G4", ":db8:ACF3:CBBC:DA32:1548:19A2:FF56", "04:D3:CC:C1:12:54", "Windows", "aaaaa", "1,2"),
+    (3, "Maquina Otavio", "Setor A2", ":db8:AAA2:CAA2:123D:94DD:099C:12EE", "01:12:CA:FC:00:09", "Windows", "aaaaa", "3"),
+    (3, "Maquina Paulo", "Setor B6", ":db8:AAAA:BBBB:CCCC:DDDD:EEEE:FFFF", "FE:EA:81:00:3C:D2", "Windows", "aaaaa", "1");
+
+
+>>>>>>> Stashed changes
 
 -- Tabela Componente
 INSERT INTO Eyes_On_Server.Componente VALUES
@@ -200,6 +232,20 @@ FROM Eyes_On_Server.Empresa e
     JOIN Eyes_On_Server.Componente c on r.fk_componente = c.id_componente
     JOIN Eyes_On_Server.Medida m on r.fk_medida = m.id_medida
 WHERE e.id_empresa = 3;
+
+-- select para a pagina do analista (lista de servidores relacionado a empresa)
+SELECT
+    s.id_servidor AS id,
+    s.nome_servidor AS Nome_Servidor,
+    s.so_servidor AS Sistema_Operacional,
+    s.descricao AS Descricao,
+    s.local_servidor AS Local,
+    GROUP_CONCAT(c.nome_componente ORDER BY c.id_componente) AS Componentes
+FROM Eyes_On_Server.Servidor AS s
+LEFT JOIN Eyes_On_Server.Componente AS c
+ON FIND_IN_SET(c.id_componente, REPLACE(s.componentes, ' ', ''))
+WHERE s.fk_empresa = 3
+GROUP BY s.id_servidor, s.nome_servidor, s.so_servidor, s.descricao, s.local_servidor;
 
 -- ------------------- Views -------------------
 
@@ -356,3 +402,7 @@ ORDER BY Momento DESC');
 PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
