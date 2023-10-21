@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS Eyes_On_Server;
 USE Eyes_On_Server;
--- DROP DATABASE IF EXISTS Eyes_On_Server;
+DROP DATABASE IF EXISTS Eyes_On_Server;
 
 -- ------------------- Criação das Tabelas -------------------
 
@@ -154,15 +154,6 @@ INSERT INTO Eyes_On_Server.Login VALUES
 (NULL, 6, "otavioW@sptech.school", "BJtP?vUdM4nFJZ@K");
 
 -- Tabela Servidor
-<<<<<<< Updated upstream
-INSERT INTO Eyes_On_Server.Servidor VALUES
-(NULL, 3, "Maquina Danilo", "Setor F5", ":db8:3333:4444:5555:6666:7777:8888", "00:1B:44:11:3A:B7", "Windows"),
-(NULL, 3, "Maquina Davi", "Setor F5", ":db8:3F3F:AB12:5059:1123:9565:1841", "09:11:44:1F:3A:A9", "Windows"),
-(NULL, 3, "Maquina Felipe", "Setor G4", ":db8:924D:AABB:DAC2:6546:1112:9456", "0B:AB:42:10:FE:BA", "Linux"),
-(NULL, 3, "Maquina Isabela", "Setor G4", ":db8:ACF3:CBBC:DA32:1548:19A2:FF56", "04:D3:CC:C1:12:54", "Windows"),
-(NULL, 3, "Maquina Otavio", "Setor A2", ":db8:AAA2:CAA2:123D:94DD:099C:12EE", "01:12:CA:FC:00:09", "Windows"),
-(NULL, 3, "Maquina Paulo", "Setor B6", ":db8:AAAA:BBBB:CCCC:DDDD:EEEE:FFFF", "FE:EA:81:00:3C:D2", "Windows");
-=======
 INSERT INTO Eyes_On_Server.Servidor
     (fk_empresa, nome_servidor, local_servidor, ipv6_servidor, mac_address, so_servidor, descricao, componentes)
 VALUES
@@ -172,9 +163,6 @@ VALUES
     (3, "Maquina Isabela", "Setor G4", ":db8:ACF3:CBBC:DA32:1548:19A2:FF56", "04:D3:CC:C1:12:54", "Windows", "aaaaa", "1,2"),
     (3, "Maquina Otavio", "Setor A2", ":db8:AAA2:CAA2:123D:94DD:099C:12EE", "01:12:CA:FC:00:09", "Windows", "aaaaa", "3"),
     (3, "Maquina Paulo", "Setor B6", ":db8:AAAA:BBBB:CCCC:DDDD:EEEE:FFFF", "FE:EA:81:00:3C:D2", "Windows", "aaaaa", "1");
-
-
->>>>>>> Stashed changes
 
 -- Tabela Componente
 INSERT INTO Eyes_On_Server.Componente VALUES
@@ -347,12 +335,63 @@ FROM Eyes_On_Server.Registro r
     join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor and r.fk_servidor = 6
 ORDER BY Momento);
 
-
 select * from View_Registros_Servidor_Paulo;
+
+-- View dos Tipos de Risco de cada Servidor
+CREATE OR REPLACE VIEW Eyes_On_Server.view_riscos_servidores 
+AS
+	SELECT
+	  s.id_servidor,
+      s.fk_empresa,
+	  COALESCE(total_alertas, 0) AS total_alertas,
+	  COALESCE(qtd_alertas_prevencao, 0) AS qtd_alertas_prevencao,
+	  COALESCE(qtd_alertas_perigo, 0) AS qtd_alertas_perigo,
+	  COALESCE(qtd_alertas_emergencia, 0) AS qtd_alertas_emergencia,
+	  CASE
+		WHEN COALESCE(total_alertas, 0) >= 300 THEN
+		  CASE
+			WHEN COALESCE(qtd_alertas_emergencia, 0) >= COALESCE(total_alertas, 0) * 0.75 THEN 'Risco Máximo'
+			WHEN COALESCE(qtd_alertas_emergencia, 0) >= COALESCE(total_alertas, 0) * 0.5 OR
+				 COALESCE(qtd_alertas_perigo, 0) >= COALESCE(total_alertas, 0) * 0.75 THEN 'Risco Muito Alto'
+			WHEN COALESCE(qtd_alertas_perigo, 0) >= COALESCE(total_alertas, 0) * 0.5 OR
+				 COALESCE(qtd_alertas_prevencao, 0) >= COALESCE(total_alertas, 0) * 0.75 THEN 'Risco Alto'
+			ELSE 'Risco Moderado'
+		  END
+		WHEN COALESCE(total_alertas, 0) >= 200 THEN
+		  CASE
+			WHEN COALESCE(qtd_alertas_emergencia, 0) >= COALESCE(total_alertas, 0) * 0.75 THEN 'Risco Muito Alto'
+			WHEN COALESCE(qtd_alertas_emergencia, 0) >= COALESCE(total_alertas, 0) * 0.5 OR
+				 COALESCE(qtd_alertas_perigo, 0) >= COALESCE(total_alertas, 0) * 0.75 THEN 'Risco Alto'
+			WHEN COALESCE(qtd_alertas_perigo, 0) >= COALESCE(total_alertas, 0) * 0.5 OR
+				 COALESCE(qtd_alertas_prevencao, 0) >= COALESCE(total_alertas, 0) * 0.75 THEN 'Risco Moderado'
+			ELSE 'Risco Baixo'
+		  END
+		WHEN COALESCE(total_alertas, 0) >= 100 THEN
+		  CASE
+			WHEN COALESCE(qtd_alertas_emergencia, 0) >= COALESCE(total_alertas, 0) * 0.75 THEN 'Risco Alto'
+			WHEN COALESCE(qtd_alertas_emergencia, 0) >= COALESCE(total_alertas, 0) * 0.5 OR
+				 COALESCE(qtd_alertas_perigo, 0) >= COALESCE(total_alertas, 0) * 0.75 THEN 'Risco Moderado'
+			WHEN COALESCE(qtd_alertas_perigo, 0) >= COALESCE(total_alertas, 0) * 0.5 OR
+				 COALESCE(qtd_alertas_prevencao, 0) >= COALESCE(total_alertas, 0) * 0.75 THEN 'Risco Baixo'
+			ELSE 'Risco Muito Baixo'
+		  END
+		ELSE 'Sem riscos'
+	  END AS nivel_de_risco
+	FROM Eyes_On_Server.Servidor s
+	LEFT JOIN (
+	   SELECT
+		fk_servidor,
+		COUNT(id_alertas) AS total_alertas,
+		SUM(CASE WHEN tipoAlerta = 'Prevenção' THEN 1 ELSE 0 END) AS qtd_alertas_prevencao,
+		SUM(CASE WHEN tipoAlerta = 'Perigo' THEN 1 ELSE 0 END) AS qtd_alertas_perigo,
+		SUM(CASE WHEN tipoAlerta = 'Emergência' THEN 1 ELSE 0 END) AS qtd_alertas_emergencia
+	  FROM Eyes_On_Server.Alertas
+	  WHERE DATE(data_hora_abertura) = CURDATE()
+	  GROUP BY fk_servidor
+	) a ON s.id_servidor = a.fk_servidor;
+    
+select * from Eyes_On_Server.view_riscos_servidores WHERE fk_empresa = 3; 
 -- ------------------- Procedures -------------------
-
--- playground do paulo
-
 DELIMITER $$
 CREATE PROCEDURE Cadastrar_Empresa (
 	nome_fantasia VARCHAR(120),
@@ -402,7 +441,5 @@ ORDER BY Momento DESC');
 PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
+-- ---------------------------------
