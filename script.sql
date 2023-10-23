@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS Eyes_On_Server;
 USE Eyes_On_Server;
-DROP DATABASE IF EXISTS Eyes_On_Server;
+-- DROP DATABASE IF EXISTS Eyes_On_Server;
 
 -- ------------------- Criação das Tabelas -------------------
 
