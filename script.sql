@@ -126,7 +126,9 @@ INSERT INTO Eyes_On_Server.Usuario VALUES
 (NULL, 2, "Davi Hilário", 1, "daviH@sptech.school"),
 (NULL, 2, "Gabriel Volpiani", 0, "gabrielV@etec.gov.br"),
 (NULL, 3, "Paulo Macena", 1, "pauloM@sptech.school"),
-(NULL, 3, "Otávio Walcovics", 0, "otavioW@sptech.school");
+(NULL, 3, "Otávio Walcovics", 0, "otavioW@sptech.school"),
+(NULL, 3, "Rafael Ferreira", 1, "rafael.ferreira.gerente@outlook.com"),
+(NULL, 3, "Claudio Sousa", 0, "claudio.sousa@analista@outlook.com");
 
 -- Tabela Login
 INSERT INTO Eyes_On_Server.Login VALUES
@@ -135,7 +137,9 @@ INSERT INTO Eyes_On_Server.Login VALUES
 (NULL, 3, "daviH@sptech.school", "2Qz#CYnYDLo!RcPP"),
 (NULL, 4, "gabrielV@etec.gov.br", "?vlYtQatP;3]Txlv"),
 (NULL, 5, "pauloM@sptech.school", "Iep%ZfnPL#t$M]P4"),
-(NULL, 6, "otavioW@sptech.school", "BJtP?vUdM4nFJZ@K");
+(NULL, 6, "otavioW@sptech.school", "BJtP?vUdM4nFJZ@K"),
+(NULL, 7, "rafael.ferreira.gerente@outlook.com", "Senhagerente"),
+(NULL, 8, "claudio.sousa@analista@outlook.com", "Senhaanalista");
 
 -- Tabela Servidor
 INSERT INTO Eyes_On_Server.Servidor
