@@ -141,12 +141,12 @@ INSERT INTO Eyes_On_Server.Login VALUES
 INSERT INTO Eyes_On_Server.Servidor
     (fk_empresa, nome_servidor, local_servidor, ipv6_servidor, mac_address, so_servidor, descricao, componentes)
 VALUES
-    (3, "Maquina Danilo", "Setor F5", ":db8:3333:4444:5555:6666:7777:8888", "00:1B:44:11:3A:B7", "Windows", "aaaaa", "1,2,3"),
-    (3, "Maquina Davi", "Setor F5", ":db8:3F3F:AB12:5059:1123:9565:1841", "09:11:44:1F:3A:A9", "Windows", "aaaaa", "1,2,3,4"),
-    (3, "Maquina Felipe", "Setor G4", ":db8:924D:AABB:DAC2:6546:1112:9456", "0B:AB:42:10:FE:BA", "Linux", "aaaaa", "1,3"),
-    (3, "Maquina Isabela", "Setor G4", ":db8:ACF3:CBBC:DA32:1548:19A2:FF56", "04:D3:CC:C1:12:54", "Windows", "aaaaa", "1,2"),
-    (3, "Maquina Otavio", "Setor A2", ":db8:AAA2:CAA2:123D:94DD:099C:12EE", "01:12:CA:FC:00:09", "Windows", "aaaaa", "3"),
-    (3, "Maquina Paulo", "Setor B6", ":db8:AAAA:BBBB:CCCC:DDDD:EEEE:FFFF", "FE:EA:81:00:3C:D2", "Windows", "aaaaa", "1");
+    (3, "Servidor DN141", "Setor F5", ":db8:3333:4444:5555:6666:7777:8888", "00:1B:44:11:3A:B7", "Windows", "Servidor adquirido no dia 1 de outubro de 2023", "1,2,3"),
+    (3, "Servidor DV921", "Setor F5", ":db8:3F3F:AB12:5059:1123:9565:1841", "09:11:44:1F:3A:A9", "Windows", "Servidor adquirido no dia 6 de setembro de 2023", "1,2,3,4"),
+    (3, "Servidor FE091", "Setor G4", ":db8:924D:AABB:DAC2:6546:1112:9456", "0B:AB:42:10:FE:BA", "Linux", "Servidor adquirido no dia 7 de outubro de 2023", "1,3"),
+    (3, "Servidor IS592", "Setor G4", ":db8:ACF3:CBBC:DA32:1548:19A2:FF56", "04:D3:CC:C1:12:54", "Windows", "Servidor adquirido no dia 30 de setembro de 2023", "1,2"),
+    (3, "Servidor OT114", "Setor A2", ":db8:AAA2:CAA2:123D:94DD:099C:12EE", "01:12:CA:FC:00:09", "Windows", "Servidor adquirido no dia 27 de agosto de 2023", "3"),
+    (3, "Servidor PA404", "Setor B6", ":db8:AAAA:BBBB:CCCC:DDDD:EEEE:FFFF", "FE:EA:81:00:3C:D2", "Windows", "Servidor adquirido no dia 29 de julho de 2023", "1");
 
 -- Tabela Componente
 INSERT INTO Eyes_On_Server.Componente VALUES
@@ -236,8 +236,8 @@ FROM Eyes_On_Server.Registro r
     join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor
 ORDER BY Servidor;
 
--- View Máquina Danilo
-CREATE OR REPLACE VIEW View_Registros_Servidor_Danilo AS
+-- View Servidor DN141
+CREATE OR REPLACE VIEW View_Registros_Servidor_DN141 AS
 (SELECT
 	s.id_servidor `Servidor`,
     r.momento_registro `Momento`,
@@ -250,8 +250,8 @@ FROM Eyes_On_Server.Registro r
     join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor and r.fk_servidor = 1
 ORDER BY Momento);
 
--- View Máquina Davi
-CREATE OR REPLACE VIEW View_Registros_Servidor_Davi AS
+-- View Servidor DV921
+CREATE OR REPLACE VIEW View_Registros_Servidor_DV921 AS
 (SELECT
 	s.id_servidor `Servidor`,
     r.momento_registro `Momento`,
@@ -264,8 +264,8 @@ FROM Eyes_On_Server.Registro r
     join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor and r.fk_servidor = 2
 ORDER BY Momento);
 
--- View Máquina Felipe
-CREATE OR REPLACE VIEW View_Registros_Servidor_Felipe AS
+-- View Servidor FE091
+CREATE OR REPLACE VIEW View_Registros_Servidor_FE091 AS
 (SELECT
 	s.id_servidor `Servidor`,
     r.momento_registro `Momento`,
@@ -278,8 +278,8 @@ FROM Eyes_On_Server.Registro r
     join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor and r.fk_servidor = 3
 ORDER BY Momento);
 
--- View Máquina Isabela
-CREATE OR REPLACE VIEW View_Registros_Servidor_Isabela AS
+-- View Servidor IS592
+CREATE OR REPLACE VIEW View_Registros_Servidor_IS592 AS
 (SELECT
 	s.id_servidor `Servidor`,
     r.momento_registro `Momento`,
@@ -292,8 +292,8 @@ FROM Eyes_On_Server.Registro r
     join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor and r.fk_servidor = 4
 ORDER BY Momento);
 
--- View Máquina Otavio
-CREATE OR REPLACE VIEW View_Registros_Servidor_Otavio AS
+-- View Servidor OT114
+CREATE OR REPLACE VIEW View_Registros_Servidor_OT114 AS
 (SELECT
 	s.id_servidor `Servidor`,
     r.momento_registro `Momento`,
@@ -306,8 +306,8 @@ FROM Eyes_On_Server.Registro r
     join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor and r.fk_servidor = 5
 ORDER BY Momento);
 
--- View Máquina Paulo
-CREATE OR REPLACE VIEW View_Registros_Servidor_Paulo AS
+-- View Servidor PA404
+CREATE OR REPLACE VIEW View_Registros_Servidor_PA404 AS
 (SELECT
 	s.id_servidor `Servidor`,
     r.momento_registro `Momento`,
@@ -319,8 +319,6 @@ FROM Eyes_On_Server.Registro r
 	join Eyes_On_Server.Medida m on m.id_medida = r.fk_medida
     join Eyes_On_Server.Servidor s on s.id_servidor = r.fk_servidor and r.fk_servidor = 6
 ORDER BY Momento);
-
-select * from View_Registros_Servidor_Paulo;
 
 -- View dos Tipos de Risco de cada Servidor
 CREATE OR REPLACE VIEW Eyes_On_Server.view_riscos_servidores 
@@ -416,10 +414,10 @@ SELECT
   )
 INTO @sql
 FROM
-  View_Registros_Servidor_paulo;
+  View_Registros_Servidor_DN141;
 
 SET @sql = CONCAT('SELECT Servidor, Momento, ', @sql, '
-FROM View_Registros_Servidor_paulo
+FROM View_Registros_Servidor_DN141
 GROUP BY Servidor, Momento
 ORDER BY Momento DESC'); 
 
