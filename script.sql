@@ -56,22 +56,6 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Componente
 	id_componente INT PRIMARY KEY AUTO_INCREMENT,
     nome_componente VARCHAR(120)
 );
--- teste concat
--- select * from Eyes_On_Server.Componente;
--- SELECT GROUP_CONCAT(nome_componente) AS Nomes_Componente
--- FROM Eyes_On_Server.Componente;
-
--- Tabela Processos
-CREATE TABLE IF NOT EXISTS Eyes_On_Server.Processos
-(
-	id_processos INT PRIMARY KEY AUTO_INCREMENT,
-    pid_processos BIGINT,
-    nome_processos VARCHAR(120),
-    uso_memoria_processos DECIMAL(4,1),
-    uso_cpu_processos DECIMAL(4,1),
-    fk_servidor INT,
-    FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor)
-);
 
 -- Tabela Processos
 CREATE TABLE IF NOT EXISTS Eyes_On_Server.Processos
@@ -193,6 +177,7 @@ SELECT * FROM Eyes_On_Server.Processos;
 SELECT * FROM Eyes_On_Server.Medida;
 SELECT * FROM Eyes_On_Server.Registro;
 
+select fk_servidor, data_hora_abertura, tipoAlerta, descricao_alerta from Eyes_On_Server.Alertas where fk_servidor = 1;
 -- ------------------- Joins -------------------
 
 -- Funcionários, Empresa, Login
