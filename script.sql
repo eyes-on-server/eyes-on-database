@@ -46,7 +46,6 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Servidor
     mac_address CHAR(17),
     so_servidor VARCHAR(120),
     descricao VARCHAR(50),
-    componentes VARCHAR(255), -- Coluna para armazenar IDs de componentes mudar no DER
     FOREIGN KEY(fk_empresa) REFERENCES Eyes_On_Server.Empresa(id_empresa)
 );
 
@@ -92,9 +91,7 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Registro
     fk_componente_medida INT,
     valor_registro VARCHAR(45),
     momento_registro DATETIME,
-    FOREIGN KEY(fk_componente) REFERENCES Eyes_On_Server.Componente(id_componente),
-    FOREIGN KEY(fk_medida) REFERENCES Eyes_On_Server.Medida(id_medida),
-    FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor)
+    FOREIGN KEY(fk_componente_medida) REFERENCES Eyes_On_Server.Componente_Medida(id_componente_medida)
 );
 
 -- Tabela Alertas
@@ -149,14 +146,14 @@ INSERT INTO Eyes_On_Server.Login VALUES
 
 -- Tabela Servidor
 INSERT INTO Eyes_On_Server.Servidor
-    (fk_empresa, nome_servidor, local_servidor, ipv6_servidor, mac_address, so_servidor, descricao, componentes)
+    (fk_empresa, nome_servidor, local_servidor, ipv6_servidor, mac_address, so_servidor, descricao)
 VALUES
-    (3, "Servidor DN141", "Setor F5", ":db8:3333:4444:5555:6666:7777:8888", "00:1B:44:11:3A:B7", "Windows", "Servidor adquirido no dia 1 de outubro de 2023", "1,2,3"),
-    (3, "Servidor DV921", "Setor F5", ":db8:3F3F:AB12:5059:1123:9565:1841", "09:11:44:1F:3A:A9", "Windows", "Servidor adquirido no dia 6 de setembro de 2023", "1,2,3,4"),
-    (3, "Servidor FE091", "Setor G4", ":db8:924D:AABB:DAC2:6546:1112:9456", "0B:AB:42:10:FE:BA", "Linux", "Servidor adquirido no dia 7 de outubro de 2023", "1,3"),
-    (3, "Servidor IS592", "Setor G4", ":db8:ACF3:CBBC:DA32:1548:19A2:FF56", "04:D3:CC:C1:12:54", "Windows", "Servidor adquirido no dia 30 de setembro de 2023", "1,2"),
-    (3, "Servidor OT114", "Setor A2", ":db8:AAA2:CAA2:123D:94DD:099C:12EE", "01:12:CA:FC:00:09", "Windows", "Servidor adquirido no dia 27 de agosto de 2023", "3"),
-    (3, "Servidor PA404", "Setor B6", ":db8:AAAA:BBBB:CCCC:DDDD:EEEE:FFFF", "FE:EA:81:00:3C:D2", "Windows", "Servidor adquirido no dia 29 de julho de 2023", "1");
+    (3, "Servidor DN141", "Setor F5", ":db8:3333:4444:5555:6666:7777:8888", "00:1B:44:11:3A:B7", "Windows", "Servidor adquirido no dia 1 de outubro de 2023"),
+    (3, "Servidor DV921", "Setor F5", ":db8:3F3F:AB12:5059:1123:9565:1841", "09:11:44:1F:3A:A9", "Windows", "Servidor adquirido no dia 6 de setembro de 2023"),
+    (3, "Servidor FE091", "Setor G4", ":db8:924D:AABB:DAC2:6546:1112:9456", "0B:AB:42:10:FE:BA", "Linux", "Servidor adquirido no dia 7 de outubro de 2023"),
+    (3, "Servidor IS592", "Setor G4", ":db8:ACF3:CBBC:DA32:1548:19A2:FF56", "04:D3:CC:C1:12:54", "Windows", "Servidor adquirido no dia 30 de setembro de 2023"),
+    (3, "Servidor OT114", "Setor A2", ":db8:AAA2:CAA2:123D:94DD:099C:12EE", "01:12:CA:FC:00:09", "Windows", "Servidor adquirido no dia 27 de agosto de 2023"),
+    (3, "Servidor PA404", "Setor B6", ":db8:AAAA:BBBB:CCCC:DDDD:EEEE:FFFF", "FE:EA:81:00:3C:D2", "Windows", "Servidor adquirido no dia 29 de julho de 2023");
 
 -- Tabela Componente
 INSERT INTO Eyes_On_Server.Componente VALUES
@@ -175,6 +172,36 @@ INSERT INTO Eyes_On_Server.Medida VALUES
 (NULL, "bytesEnviados", "B"),
 (NULL, "bytesRecebidos", "B");
 
+INSERT INTO Eyes_On_Server.Componente_Medida VALUES 
+(NULL, 1, 1, 2),
+(NULL, 1, 1, 4),
+(NULL, 1, 2, 2),
+(NULL, 1, 3, 2),
+(NULL, 1, 4, 6),
+(NULL, 1, 4, 7),
+(NULL, 2, 1, 2),
+(NULL, 2, 1, 4),
+(NULL, 2, 2, 2),
+(NULL, 2, 3, 2),
+(NULL, 3, 1, 2),
+(NULL, 3, 2, 2),
+(NULL, 4, 1, 2),
+(NULL, 4, 1, 4),
+(NULL, 4, 2, 2),
+(NULL, 4, 3, 2),
+(NULL, 4, 4, 6),
+(NULL, 4, 4, 7),
+(NULL, 5, 1, 2),
+(NULL, 5, 3, 2),
+(NULL, 5, 4, 6),
+(NULL, 5, 4, 7),
+(NULL, 6, 1, 2),
+(NULL, 6, 1, 4),
+(NULL, 6, 2, 2),
+(NULL, 6, 3, 2),
+(NULL, 6, 4, 6),
+(NULL, 6, 4, 7);
+
 -- ------------------- Selects -------------------
 
 SELECT * FROM Eyes_On_Server.Empresa;
@@ -183,9 +210,9 @@ SELECT * FROM Eyes_On_Server.Alertas;
 SELECT * FROM Eyes_On_Server.Login;
 SELECT * FROM Eyes_On_Server.Servidor;
 SELECT * FROM Eyes_On_Server.Componente;
+SELECT * FROM Eyes_On_Server.Medida;
 SELECT * FROM Eyes_On_Server.Componente_Medida;
 SELECT * FROM Eyes_On_Server.Processos;
-SELECT * FROM Eyes_On_Server.Medida;
 SELECT * FROM Eyes_On_Server.Registro;
 
 select fk_servidor, data_hora_abertura, tipoAlerta, descricao_alerta from Eyes_On_Server.Alertas where fk_servidor = 1;
@@ -202,36 +229,8 @@ FROM Eyes_On_Server.Usuario u
 	join Eyes_On_Server.Empresa e on u.fk_empresa = e.id_empresa
 	join Eyes_On_Server.Login l on l.fk_usuario = u.id_usuario;
 
--- Empresa, Servidor, Componente, Medida
-SELECT
-	e.nome_fantasia,
-	s.nome_servidor, 
-    s.so_servidor,
-    s.local_servidor,
-    c.nome_componente,
-    m.nome_medida
-FROM Eyes_On_Server.Empresa e
-	JOIN Eyes_On_Server.Servidor s on s.fk_empresa = e.id_empresa
-    JOIN Eyes_On_Server.Registro r on r.fk_servidor = s.id_servidor
-    JOIN Eyes_On_Server.Componente c on r.fk_componente = c.id_componente
-    JOIN Eyes_On_Server.Medida m on r.fk_medida = m.id_medida
-WHERE e.id_empresa = 3;
-
--- select para a pagina do analista (lista de servidores relacionado a empresa)
-SELECT
-    s.id_servidor AS id,
-    s.nome_servidor AS Nome_Servidor,
-    s.so_servidor AS Sistema_Operacional,
-    s.descricao AS Descricao,
-    s.local_servidor AS Local,
-    GROUP_CONCAT(c.nome_componente ORDER BY c.id_componente) AS Componentes
-FROM Eyes_On_Server.Servidor AS s
-LEFT JOIN Eyes_On_Server.Componente AS c
-ON FIND_IN_SET(c.id_componente, REPLACE(s.componentes, ' ', ''))
-WHERE s.fk_empresa = 3
-GROUP BY s.id_servidor, s.nome_servidor, s.so_servidor, s.descricao, s.local_servidor;
-
 -- ------------------- Views -------------------
+
 
 -- View Todos Registros
 CREATE OR REPLACE VIEW View_Registros AS
@@ -242,7 +241,7 @@ SELECT
     c.nome_componente `Componente`,
     m.nome_medida `Medida`
 FROM Eyes_On_Server.Registro r
-	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medidade = r.fk_componente_medida 
+	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = r.fk_componente_medida 
 	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
 	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
     join Eyes_On_Server.Servidor s on s.id_servidor = cm.fk_servidor
@@ -257,7 +256,7 @@ CREATE OR REPLACE VIEW View_Registros_Servidor_DN141 AS
     c.nome_componente `Componente`,
     m.nome_medida `Medida`
 FROM Eyes_On_Server.Registro r
-	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medidade = r.fk_componente_medida 
+	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = r.fk_componente_medida 
 	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
 	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
     join Eyes_On_Server.Servidor s on s.id_servidor = cm.fk_servidor and cm.fk_servidor = 1
@@ -272,7 +271,7 @@ CREATE OR REPLACE VIEW View_Registros_Servidor_DV921 AS
     c.nome_componente `Componente`,
     m.nome_medida `Medida`
 FROM Eyes_On_Server.Registro r
-	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medidade = r.fk_componente_medida 
+	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = r.fk_componente_medida 
 	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
 	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
     join Eyes_On_Server.Servidor s on s.id_servidor = cm.fk_servidor and cm.fk_servidor = 2
@@ -287,7 +286,7 @@ CREATE OR REPLACE VIEW View_Registros_Servidor_FE091 AS
     c.nome_componente `Componente`,
     m.nome_medida `Medida`
 FROM Eyes_On_Server.Registro r
-	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medidade = r.fk_componente_medida 
+	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = r.fk_componente_medida 
 	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
 	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
     join Eyes_On_Server.Servidor s on s.id_servidor = cm.fk_servidor and cm.fk_servidor = 3
@@ -302,7 +301,7 @@ CREATE OR REPLACE VIEW View_Registros_Servidor_IS592 AS
     c.nome_componente `Componente`,
     m.nome_medida `Medida`
 FROM Eyes_On_Server.Registro r
-	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medidade = r.fk_componente_medida 
+	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = r.fk_componente_medida 
 	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
 	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
     join Eyes_On_Server.Servidor s on s.id_servidor = cm.fk_servidor and cm.fk_servidor = 4
@@ -317,7 +316,7 @@ CREATE OR REPLACE VIEW View_Registros_Servidor_OT114 AS
     c.nome_componente `Componente`,
     m.nome_medida `Medida`
 FROM Eyes_On_Server.Registro r
-	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medidade = r.fk_componente_medida 
+	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = r.fk_componente_medida 
 	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
 	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
     join Eyes_On_Server.Servidor s on s.id_servidor = cm.fk_servidor and cm.fk_servidor = 5
@@ -332,7 +331,7 @@ CREATE OR REPLACE VIEW View_Registros_Servidor_PA404 AS
     c.nome_componente `Componente`,
     m.nome_medida `Medida`
 FROM Eyes_On_Server.Registro r
-JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medidade = r.fk_componente_medida 
+JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = r.fk_componente_medida 
 	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
 	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
     join Eyes_On_Server.Servidor s on s.id_servidor = cm.fk_servidor and cm.fk_servidor = 6
@@ -390,8 +389,24 @@ AS
 	  WHERE DATE(data_hora_abertura) = CURDATE()
 	  GROUP BY fk_servidor
 	) a ON s.id_servidor = a.fk_servidor;
-    
-select * from Eyes_On_Server.view_riscos_servidores WHERE fk_empresa = 3; 
+
+-- Empresa, Servidor, Componente, Medida
+CREATE OR REPLACE VIEW Eyes_On_Server.view_componentes_servidores
+AS
+SELECT
+	e.nome_fantasia `empresa`,
+	s.nome_servidor `servidor`, 
+    s.so_servidor `sistema operacional`,
+    s.mac_address `mac adress`,
+    s.local_servidor `local`,
+    c.nome_componente `componente`,
+    m.nome_medida `medida`
+FROM Eyes_On_Server.Empresa e
+	JOIN Eyes_On_Server.Servidor s on s.fk_empresa = e.id_empresa
+    JOIN Eyes_On_Server.Componente_Medida cm on s.id_servidor = cm.fk_servidor
+    JOIN Eyes_On_Server.Componente c on cm.fk_componente = c.id_componente
+    JOIN Eyes_On_Server.Medida m on cm.fk_medida = m.id_medida;
+
 -- ------------------- Procedures -------------------
 DELIMITER $$
 CREATE PROCEDURE Cadastrar_Empresa (
