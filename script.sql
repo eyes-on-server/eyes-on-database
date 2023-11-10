@@ -396,8 +396,8 @@ AS
 SELECT
 	e.nome_fantasia `empresa`,
 	s.nome_servidor `servidor`, 
-    s.so_servidor `sistema operacional`,
-    s.mac_address `mac adress`,
+    s.so_servidor `sistemaOperacional`,
+    s.mac_address `macAddress`,
     s.local_servidor `local`,
     c.nome_componente `componente`,
     m.nome_medida `medida`
