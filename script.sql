@@ -81,7 +81,12 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Componente_Medida(
 	id_componente_medida INT PRIMARY KEY AUTO_INCREMENT,
 	fk_servidor INT NOT NULL, 
     fk_componente INT NOT NULL, 
-    fk_medida INT NOT NULL
+    fk_medida INT NOT NULL,
+    fk_comando INT,
+    FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor),
+    FOREIGN KEY(fk_componente) REFERENCES Eyes_On_Server.Componente(id_componente),
+    FOREIGN KEY(fk_medida) REFERENCES Eyes_On_Server.Medida(id_medida),
+    FOREIGN KEY(fk_comando) REFERENCES Eyes_On_Server.Comandos(id_comandos)
 );
 
 -- Tabela Registro
@@ -113,6 +118,13 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Alertas
 -- 0: Prevenção 
 -- 1: Perigo
 -- 2: Emergencia 
+
+-- Tabela Comandos
+CREATE TABLE IF NOT EXISTS Eyes_On_Server.Comandos(
+	id_comandos INT PRIMARY KEY AUTO_INCREMENT,
+    comando_java VARCHAR(120),
+    comando_python VARCHAR(120)
+);
 
 -- ------------------- Inserindo Dados -------------------
 
