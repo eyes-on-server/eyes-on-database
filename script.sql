@@ -76,27 +76,43 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Medida
     simbolo_medida VARCHAR(5)
 );
 
+-- Tabela Comandos
+CREATE TABLE IF NOT EXISTS Eyes_On_Server.Comandos(
+	id_comandos INT PRIMARY KEY AUTO_INCREMENT,
+    nome_comando VARCHAR(120),
+    comando_java VARCHAR(120),
+    comando_python VARCHAR(120)
+);
+
 -- Taela ComponenteMedida
 CREATE TABLE IF NOT EXISTS Eyes_On_Server.Componente_Medida(
 	id_componente_medida INT PRIMARY KEY AUTO_INCREMENT,
-	fk_servidor INT NOT NULL, 
+    nome_componente_medida VARCHAR(120),
     fk_componente INT NOT NULL, 
     fk_medida INT NOT NULL,
     fk_comando INT,
-    FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor),
     FOREIGN KEY(fk_componente) REFERENCES Eyes_On_Server.Componente(id_componente),
     FOREIGN KEY(fk_medida) REFERENCES Eyes_On_Server.Medida(id_medida),
     FOREIGN KEY(fk_comando) REFERENCES Eyes_On_Server.Comandos(id_comandos)
+);
+
+-- Taela ComponenteServidor
+CREATE TABLE IF NOT EXISTS Eyes_On_Server.Componente_Servidor(
+	id_componente_servidor INT PRIMARY KEY AUTO_INCREMENT,
+    fk_servidor INT NOT NULL, 
+    fk_componente_medida INT NOT NULL,
+    FOREIGN KEY(fk_componente_medida) REFERENCES Eyes_On_Server.Componente_Medida(id_componente_medida),
+    FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor)
 );
 
 -- Tabela Registro
 CREATE TABLE IF NOT EXISTS Eyes_On_Server.Registro
 (
 	id_registro INT PRIMARY KEY AUTO_INCREMENT,
-    fk_componente_medida INT,
+    fk_componente_servidor INT,
     valor_registro VARCHAR(45),
     momento_registro DATETIME,
-    FOREIGN KEY(fk_componente_medida) REFERENCES Eyes_On_Server.Componente_Medida(id_componente_medida)
+    FOREIGN KEY(fk_componente_servidor) REFERENCES Eyes_On_Server.Componente_Servidor(id_componente_servidor)
 );
 
 -- Tabela Alertas
@@ -118,13 +134,6 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Alertas
 -- 0: Prevenção 
 -- 1: Perigo
 -- 2: Emergencia 
-
--- Tabela Comandos
-CREATE TABLE IF NOT EXISTS Eyes_On_Server.Comandos(
-	id_comandos INT PRIMARY KEY AUTO_INCREMENT,
-    comando_java VARCHAR(120),
-    comando_python VARCHAR(120)
-);
 
 -- ------------------- Inserindo Dados -------------------
 
@@ -184,35 +193,54 @@ INSERT INTO Eyes_On_Server.Medida VALUES
 (NULL, "bytesEnviados", "B"),
 (NULL, "bytesRecebidos", "B");
 
-INSERT INTO Eyes_On_Server.Componente_Medida VALUES 
-(NULL, 1, 1, 2),
-(NULL, 1, 1, 4),
-(NULL, 1, 2, 2),
-(NULL, 1, 3, 2),
-(NULL, 1, 4, 6),
-(NULL, 1, 4, 7),
-(NULL, 2, 1, 2),
-(NULL, 2, 1, 4),
-(NULL, 2, 2, 2),
-(NULL, 2, 3, 2),
-(NULL, 3, 1, 2),
-(NULL, 3, 2, 2),
-(NULL, 4, 1, 2),
-(NULL, 4, 1, 4),
-(NULL, 4, 2, 2),
-(NULL, 4, 3, 2),
-(NULL, 4, 4, 6),
-(NULL, 4, 4, 7),
-(NULL, 5, 1, 2),
-(NULL, 5, 3, 2),
-(NULL, 5, 4, 6),
-(NULL, 5, 4, 7),
-(NULL, 6, 1, 2),
-(NULL, 6, 1, 4),
-(NULL, 6, 2, 2),
-(NULL, 6, 3, 2),
-(NULL, 6, 4, 6),
-(NULL, 6, 4, 7);
+-- Tabela Comandos
+INSERT INTO Eyes_On_Server.Comandos VALUES
+(NULL, "Frequência da CPU", "getCpuFrequency()", ""),
+(NULL, "Uso da CPU", "getCpuUsage()", ""),
+(NULL, "Memória em Uso", "getMemoryUsage()", ""),
+(NULL, "Disco em Uso", "getDiskUsage()", ""),
+(NULL, "Bytes Enviados", "getSentBytes()", ""),
+(NULL, "Bytes Recebidos", "getReceivedBytes()", "");
+
+-- Tabela Componente Medida
+INSERT INTO Eyes_On_Server.Componente_Medida VALUES
+(NULL, "Uso da CPU (%)", 1, 2, 2),
+(NULL, "Frequência da CPU (Htz)", 1, 4, 1),
+(NULL, "Uso da Memória (%)", 2, 2, 3),
+(NULL, "Uso do Disco (%)", 3, 2, 4),
+(NULL, "Bytes Enviados", 4, 6, 5),
+(NULL, "Bytes Recebidos", 4, 7, 6);
+
+-- Tabela Componente Servidor
+INSERT INTO Eyes_On_Server.Componente_Servidor VALUES 
+(NULL, 1, 1),
+(NULL, 1, 2),
+(NULL, 1, 3),
+(NULL, 1, 4),
+(NULL, 1, 5),
+(NULL, 1, 6),
+(NULL, 2, 1),
+(NULL, 2, 2),
+(NULL, 2, 3),
+(NULL, 2, 4),
+(NULL, 3, 1),
+(NULL, 3, 3),
+(NULL, 4, 1),
+(NULL, 4, 2),
+(NULL, 4, 3),
+(NULL, 4, 4),
+(NULL, 4, 5),
+(NULL, 4, 6),
+(NULL, 5, 1),
+(NULL, 5, 4),
+(NULL, 5, 5),
+(NULL, 5, 6),
+(NULL, 6, 1),
+(NULL, 6, 2),
+(NULL, 6, 3),
+(NULL, 6, 4),
+(NULL, 6, 5),
+(NULL, 6, 6);
 
 -- ------------------- Selects -------------------
 
@@ -223,11 +251,12 @@ SELECT * FROM Eyes_On_Server.Login;
 SELECT * FROM Eyes_On_Server.Servidor;
 SELECT * FROM Eyes_On_Server.Componente;
 SELECT * FROM Eyes_On_Server.Medida;
+SELECT * FROM Eyes_On_Server.Comandos;
 SELECT * FROM Eyes_On_Server.Componente_Medida;
+SELECT * FROM Eyes_On_Server.Componente_Servidor;
 SELECT * FROM Eyes_On_Server.Processos;
 SELECT * FROM Eyes_On_Server.Registro;
 
-select fk_servidor, data_hora_abertura, tipoAlerta, descricao_alerta from Eyes_On_Server.Alertas where fk_servidor = 1;
 -- ------------------- Joins -------------------
 
 -- Funcionários, Empresa, Login
@@ -243,7 +272,6 @@ FROM Eyes_On_Server.Usuario u
 
 -- ------------------- Views -------------------
 
-
 -- View Todos Registros
 CREATE OR REPLACE VIEW View_Registros AS
 SELECT
@@ -253,10 +281,11 @@ SELECT
     c.nome_componente `Componente`,
     m.nome_medida `Medida`
 FROM Eyes_On_Server.Registro r
-	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = r.fk_componente_medida 
+	JOIN Eyes_On_Server.Componente_Servidor cs on cs.id_componente_servidor = r.fk_componente_servidor
+	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = cs.fk_componente_medida 
 	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
 	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
-    join Eyes_On_Server.Servidor s on s.id_servidor = cm.fk_servidor
+    join Eyes_On_Server.Servidor s on s.id_servidor = cs.fk_servidor
 ORDER BY Servidor;
 
 -- View Servidor DN141
@@ -268,10 +297,11 @@ CREATE OR REPLACE VIEW View_Registros_Servidor_DN141 AS
     c.nome_componente `Componente`,
     m.nome_medida `Medida`
 FROM Eyes_On_Server.Registro r
-	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = r.fk_componente_medida 
+	JOIN Eyes_On_Server.Componente_Servidor cs on cs.id_componente_servidor = r.fk_componente_servidor
+	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = cs.fk_componente_medida
 	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
 	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
-    join Eyes_On_Server.Servidor s on s.id_servidor = cm.fk_servidor and cm.fk_servidor = 1
+    join Eyes_On_Server.Servidor s on s.id_servidor = cs.fk_servidor and cs.fk_servidor = 1
 ORDER BY Momento);
 
 -- View Servidor DV921
@@ -283,10 +313,11 @@ CREATE OR REPLACE VIEW View_Registros_Servidor_DV921 AS
     c.nome_componente `Componente`,
     m.nome_medida `Medida`
 FROM Eyes_On_Server.Registro r
-	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = r.fk_componente_medida 
+	JOIN Eyes_On_Server.Componente_Servidor cs on cs.id_componente_servidor = r.fk_componente_servidor
+	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = cs.fk_componente_medida 
 	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
 	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
-    join Eyes_On_Server.Servidor s on s.id_servidor = cm.fk_servidor and cm.fk_servidor = 2
+    join Eyes_On_Server.Servidor s on s.id_servidor = cs.fk_servidor and cs.fk_servidor = 2
 ORDER BY Momento);
 
 -- View Servidor FE091
@@ -298,10 +329,11 @@ CREATE OR REPLACE VIEW View_Registros_Servidor_FE091 AS
     c.nome_componente `Componente`,
     m.nome_medida `Medida`
 FROM Eyes_On_Server.Registro r
-	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = r.fk_componente_medida 
+	JOIN Eyes_On_Server.Componente_Servidor cs on cs.id_componente_servidor = r.fk_componente_servidor
+	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = cs.fk_componente_medida 
 	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
 	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
-    join Eyes_On_Server.Servidor s on s.id_servidor = cm.fk_servidor and cm.fk_servidor = 3
+    join Eyes_On_Server.Servidor s on s.id_servidor = cs.fk_servidor and cs.fk_servidor = 3
 ORDER BY Momento);
 
 -- View Servidor IS592
@@ -313,10 +345,11 @@ CREATE OR REPLACE VIEW View_Registros_Servidor_IS592 AS
     c.nome_componente `Componente`,
     m.nome_medida `Medida`
 FROM Eyes_On_Server.Registro r
-	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = r.fk_componente_medida 
+	JOIN Eyes_On_Server.Componente_Servidor cs on cs.id_componente_servidor = r.fk_componente_servidor
+	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = cs.fk_componente_medida
 	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
 	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
-    join Eyes_On_Server.Servidor s on s.id_servidor = cm.fk_servidor and cm.fk_servidor = 4
+    join Eyes_On_Server.Servidor s on s.id_servidor = cs.fk_servidor and cs.fk_servidor = 4
 ORDER BY Momento);
 
 -- View Servidor OT114
@@ -328,10 +361,11 @@ CREATE OR REPLACE VIEW View_Registros_Servidor_OT114 AS
     c.nome_componente `Componente`,
     m.nome_medida `Medida`
 FROM Eyes_On_Server.Registro r
-	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = r.fk_componente_medida 
+	JOIN Eyes_On_Server.Componente_Servidor cs on cs.id_componente_servidor = r.fk_componente_servidor
+	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = cs.fk_componente_medida
 	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
 	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
-    join Eyes_On_Server.Servidor s on s.id_servidor = cm.fk_servidor and cm.fk_servidor = 5
+    join Eyes_On_Server.Servidor s on s.id_servidor = cs.fk_servidor and cs.fk_servidor = 5
 ORDER BY Momento);
 
 -- View Servidor PA404
@@ -343,10 +377,11 @@ CREATE OR REPLACE VIEW View_Registros_Servidor_PA404 AS
     c.nome_componente `Componente`,
     m.nome_medida `Medida`
 FROM Eyes_On_Server.Registro r
-JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = r.fk_componente_medida 
-	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
-	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
-    join Eyes_On_Server.Servidor s on s.id_servidor = cm.fk_servidor and cm.fk_servidor = 6
+	JOIN Eyes_On_Server.Componente_Servidor cs ON cs.id_componente_servidor = r.fk_componente_servidor
+	JOIN Eyes_On_Server.Componente_Medida cm ON cm.id_componente_medida = cs.fk_componente_medida
+	JOIN Eyes_On_Server.Componente c ON c.id_componente = cm.fk_componente
+	JOIN Eyes_On_Server.Medida m ON m.id_medida = cm.fk_medida
+    JOIN Eyes_On_Server.Servidor s ON s.id_servidor = cs.fk_servidor AND cs.fk_servidor = 6
 ORDER BY Momento);
 
 -- View dos Tipos de Risco de cada Servidor
@@ -412,12 +447,16 @@ SELECT
     s.mac_address `macAddress`,
     s.local_servidor `local`,
     c.nome_componente `componente`,
-    m.nome_medida `medida`
+    m.nome_medida `medida`,
+    cd.comando_java `comandoJava`,
+    cd.comando_python `comandoPython`
 FROM Eyes_On_Server.Empresa e
 	JOIN Eyes_On_Server.Servidor s on s.fk_empresa = e.id_empresa
-    JOIN Eyes_On_Server.Componente_Medida cm on s.id_servidor = cm.fk_servidor
+    JOIN Eyes_On_Server.Componente_Servidor cs on cs.fk_servidor = s.id_servidor
+    JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = cs.fk_componente_medida
     JOIN Eyes_On_Server.Componente c on cm.fk_componente = c.id_componente
-    JOIN Eyes_On_Server.Medida m on cm.fk_medida = m.id_medida;
+    JOIN Eyes_On_Server.Medida m on cm.fk_medida = m.id_medida
+    JOIN Eyes_On_Server.Comandos cd on cm.fk_comando = cd.id_comandos;
 
 -- ------------------- Procedures -------------------
 DELIMITER $$
