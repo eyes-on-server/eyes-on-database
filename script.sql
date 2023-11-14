@@ -195,12 +195,12 @@ INSERT INTO Eyes_On_Server.Medida VALUES
 
 -- Tabela Comandos
 INSERT INTO Eyes_On_Server.Comandos VALUES
-(NULL, "Frequência da CPU", "getCpuFrequency()", ""),
-(NULL, "Uso da CPU", "getCpuUsage()", ""),
-(NULL, "Memória em Uso", "getMemoryUsage()", ""),
-(NULL, "Disco em Uso", "getDiskUsage()", ""),
-(NULL, "Bytes Enviados", "getSentBytes()", ""),
-(NULL, "Bytes Recebidos", "getReceivedBytes()", "");
+(NULL, "Frequência da CPU", "org.example.looca.cpu.CpuFrequencia", ""),
+(NULL, "Uso da CPU", "org.example.looca.cpu.CpuUso", ""),
+(NULL, "Memória em Uso", "org.example.looca.memoria.MemoriaUso", ""),
+(NULL, "Disco em Uso", "org.example.looca.disco.DiscoUso", ""),
+(NULL, "Bytes Enviados", "org.example.looca.rede.RedeBytesEnviados", ""),
+(NULL, "Bytes Recebidos", "org.example.looca.rede.RedeBytesRecebidos", "");
 
 -- Tabela Componente Medida
 INSERT INTO Eyes_On_Server.Componente_Medida VALUES
@@ -458,6 +458,7 @@ FROM Eyes_On_Server.Empresa e
     JOIN Eyes_On_Server.Medida m on cm.fk_medida = m.id_medida
     JOIN Eyes_On_Server.Comandos cd on cm.fk_comando = cd.id_comandos;
 
+SELECT * FROM Eyes_On_Server.view_componentes_servidores ORDER BY servidor;
 -- Login, Usuario e Empresa
 CREATE OR REPLACE VIEW Eyes_On_Server.View_Login
 AS
