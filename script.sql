@@ -458,6 +458,20 @@ FROM Eyes_On_Server.Empresa e
     JOIN Eyes_On_Server.Medida m on cm.fk_medida = m.id_medida
     JOIN Eyes_On_Server.Comandos cd on cm.fk_comando = cd.id_comandos;
 
+-- Login, Usuario e Empresa
+CREATE OR REPLACE VIEW Eyes_On_Server.View_Login
+AS
+SELECT
+	u.nome,
+    e.id_empresa,
+    l.login,
+    l.senha
+FROM Eyes_On_Server.Login l
+	JOIN Eyes_On_Server.Usuario u ON u.id_usuario = l.fk_usuario
+    JOIN Eyes_On_Server.Empresa e ON e.id_empresa = u.fk_empresa;
+    
+select * from Eyes_On_Server.View_Login;
+
 -- ------------------- Procedures -------------------
 DELIMITER $$
 CREATE PROCEDURE Cadastrar_Empresa (
