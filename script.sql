@@ -135,6 +135,14 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Alertas
 -- 1: Perigo
 -- 2: Emergencia 
 
+-- Tabela Downtime
+CREATE TABLE IF NOT EXISTS Eyes_On_Server.Downtime(
+	id_downtime INT PRIMARY KEY AUTO_INCREMENT,
+    fk_servidor INT,
+    tempo_downtime INT,
+    momento datetime
+);
+
 -- ------------------- Inserindo Dados -------------------
 
 -- Tabela Empresa
@@ -256,6 +264,7 @@ SELECT * FROM Eyes_On_Server.Componente_Medida;
 SELECT * FROM Eyes_On_Server.Componente_Servidor;
 SELECT * FROM Eyes_On_Server.Processos;
 SELECT * FROM Eyes_On_Server.Registro;
+SELECT * FROM Eyes_On_Server.Downtime;
 
 -- ------------------- Joins -------------------
 
@@ -524,3 +533,43 @@ EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
 -- ---------------------------------
+
+-- Trigger
+
+DELIMITER //
+
+CREATE TRIGGER verificar_downtime
+AFTER INSERT ON Eyes_On_Server.Registro
+FOR EACH ROW
+BEGIN
+    DECLARE ultimo_momento_registro TIMESTAMP;
+    DECLARE diferenca_segundos INT;
+    DECLARE servidor INT;
+
+    SELECT MAX(momento_registro) INTO ultimo_momento_registro
+    FROM Eyes_On_Server.Registro
+    JOIN Eyes_On_Server.Componente_Servidor ON id_componente_servidor = fk_componente_servidor
+    WHERE fk_servidor = (
+		SELECT fk_servidor
+        FROM Eyes_On_Server.Componente_Servidor cs
+        JOIN Eyes_On_Server.Registro r ON r.fk_componente_servidor = cs.id_componente_servidor
+        LIMIT 1
+    )
+    GROUP BY fk_servidor;
+    
+    SELECT fk_servidor INTO servidor
+	FROM Eyes_On_Server.Componente_Servidor cs
+	JOIN Eyes_On_Server.Registro r ON r.fk_componente_servidor = cs.id_componente_servidor;
+
+    SET diferenca_segundos = TIMESTAMPDIFF(SECOND, ultimo_momento_registro, NEW.momento_registro);
+
+    IF diferenca_segundos > 25 THEN
+        INSERT INTO Eyes_On_Server.Downtime VALUES (NULL, servidor, diferenca_segundos, NEW.momento_registro);
+    END IF;
+END;
+//
+
+DELIMITER ;
+
+insert into registro values (null, 1, 20, now());
+insert into registro values (null, 1, 20, now());
