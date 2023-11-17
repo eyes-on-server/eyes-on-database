@@ -140,7 +140,9 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Downtime(
 	id_downtime INT PRIMARY KEY AUTO_INCREMENT,
     fk_servidor INT,
     tempo_downtime INT,
-    momento datetime
+    prejuizo DECIMAL(63,1),
+    momento datetime,
+    FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor)
 );
 
 -- ------------------- Inserindo Dados -------------------
@@ -280,7 +282,6 @@ FROM Eyes_On_Server.Usuario u
 	join Eyes_On_Server.Login l on l.fk_usuario = u.id_usuario;
 
 -- ------------------- Views -------------------
-
 -- View Todos Registros
 CREATE OR REPLACE VIEW View_Registros AS
 SELECT
@@ -535,42 +536,66 @@ DEALLOCATE PREPARE stmt;
 
 -- ---------------------------------
 
--- Trigger
+SELECT max(momento_registro) FROM Eyes_On_Server.Registro r
+	JOIN Eyes_On_Server.Componente_Servidor cs ON cs.id_componente_servidor = r.fk_componente_servidor
+    JOIN Eyes_On_Server.Servidor s ON s.id_servidor = cs.fk_servidor
+    WHERE s.id_servidor = (
+		SELECT fk_servidor FROM Eyes_On_Server.Servidor s
+        JOIN Eyes_On_Server.Componente_Servidor cs ON cs.fk_servidor = s.id_servidor
+        LIMIT 1
+    );
 
+-- ------------------- Trigger -------------------
+select * from view_registros;
 DELIMITER //
 
 CREATE TRIGGER verificar_downtime
 AFTER INSERT ON Eyes_On_Server.Registro
 FOR EACH ROW
 BEGIN
-    DECLARE ultimo_momento_registro TIMESTAMP;
+    DECLARE ultimo_momento_registro DATETIME;
+    DECLARE penultimo_momento_registro DATETIME;
     DECLARE diferenca_segundos INT;
-    DECLARE servidor INT;
-
-    SELECT MAX(momento_registro) INTO ultimo_momento_registro
-    FROM Eyes_On_Server.Registro
-    JOIN Eyes_On_Server.Componente_Servidor ON id_componente_servidor = fk_componente_servidor
-    WHERE fk_servidor = (
-		SELECT fk_servidor
-        FROM Eyes_On_Server.Componente_Servidor cs
-        JOIN Eyes_On_Server.Registro r ON r.fk_componente_servidor = cs.id_componente_servidor
-        LIMIT 1
-    )
-    GROUP BY fk_servidor;
+    DECLARE fk_servidor INT;
+    DECLARE prejuizo_por_segundo DECIMAL (63,1);
+    DECLARE margem INT;
     
-    SELECT fk_servidor INTO servidor
-	FROM Eyes_On_Server.Componente_Servidor cs
-	JOIN Eyes_On_Server.Registro r ON r.fk_componente_servidor = cs.id_componente_servidor;
-
-    SET diferenca_segundos = TIMESTAMPDIFF(SECOND, ultimo_momento_registro, NEW.momento_registro);
-
-    IF diferenca_segundos > 25 THEN
-        INSERT INTO Eyes_On_Server.Downtime VALUES (NULL, servidor, diferenca_segundos, NEW.momento_registro);
-    END IF;
+    SET margem = 25;
+    SET prejuizo_por_segundo = 1111111.1;
+	
+    SELECT cs.fk_servidor INTO fk_servidor
+    FROM Eyes_On_Server.Registro r
+		JOIN Eyes_On_Server.Componente_Servidor cs ON cs.id_componente_servidor = r.fk_componente_servidor
+		JOIN Eyes_On_Server.Servidor s on s.id_servidor = cs.fk_servidor
+    WHERE id_componente_servidor = NEW.fk_componente_servidor
+    LIMIT 1;
+    
+    SELECT MAX(Momento) INTO ultimo_momento_registro
+    FROM View_Registros
+    WHERE Servidor = fk_servidor;
+    
+    SELECT MAX(Momento) INTO penultimo_momento_registro
+    FROM View_Registros
+    WHERE Servidor = fk_servidor AND Momento < ultimo_momento_registro;
+    
+    IF penultimo_momento_registro IS NOT NULL 
+    THEN
+		SET diferenca_segundos = TIMESTAMPDIFF(SECOND, penultimo_momento_registro, ultimo_momento_registro);
+        
+		IF diferenca_segundos > margem
+        THEN
+			INSERT INTO Eyes_On_Server.Downtime VALUES (NULL, fk_servidor, diferenca_segundos - margem, (diferenca_segundos - margem) * prejuizo_por_segundo, now());
+		END IF;
+        
+	END IF;
 END;
 //
 
 DELIMITER ;
 
 insert into registro values (null, 1, 20, now());
-insert into registro values (null, 1, 20, now());
+insert into registro values (null, 3, 20, now());
+insert into registro values (null, 7, 20, now());
+insert into registro values (null, 8, 20, now());
+
+select * from Eyes_On_Server.downtime;
