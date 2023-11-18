@@ -484,15 +484,15 @@ CREATE OR REPLACE VIEW View_Downtime_Servidores
 AS
 SELECT
 	e.id_empresa,
-	d.fk_servidor,
+	s.id_servidor,
     s.nome_servidor,
     s.local_servidor,
-    d.tempo_downtime,
-    d.prejuizo,
-    d.momento
+    COALESCE(d.tempo_downtime,0) tempo_downtime,
+    COALESCE(d.prejuizo,0) prejuizo,
+    COALESCE(d.momento,0) momento
 FROM Eyes_On_Server.Downtime d
-	JOIN Eyes_On_Server.Servidor s ON s.id_servidor = d.fk_servidor
-    JOIN Eyes_On_Server.Empresa e ON e.id_empresa = s.fk_empresa
+	RIGHT JOIN Eyes_On_Server.Servidor s ON s.id_servidor = d.fk_servidor
+	JOIN Eyes_On_Server.Empresa e ON e.id_empresa = s.fk_empresa
 ORDER BY d.fk_servidor, s.local_servidor, d.momento DESC;
 
 -- ------------------- Procedures -------------------
@@ -604,7 +604,3 @@ END;
 //
 
 DELIMITER ;
-
-Insert into registro values (null, 12, 20, "2023-11-18 18:00:00");
-
-select sum(prejuizo), sum(tempo_downtime) from View_Downtime_Servidores where id_empresa = 3;
