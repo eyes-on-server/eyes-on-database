@@ -468,7 +468,6 @@ FROM Eyes_On_Server.Empresa e
     JOIN Eyes_On_Server.Medida m on cm.fk_medida = m.id_medida
     JOIN Eyes_On_Server.Comandos cd on cm.fk_comando = cd.id_comandos;
 
-SELECT * FROM Eyes_On_Server.view_componentes_servidores ORDER BY servidor;
 -- Login, Usuario e Empresa
 CREATE OR REPLACE VIEW Eyes_On_Server.View_Login
 AS
@@ -480,8 +479,21 @@ SELECT
 FROM Eyes_On_Server.Login l
 	JOIN Eyes_On_Server.Usuario u ON u.id_usuario = l.fk_usuario
     JOIN Eyes_On_Server.Empresa e ON e.id_empresa = u.fk_empresa;
-    
-select * from Eyes_On_Server.View_Login;
+
+CREATE OR REPLACE VIEW View_Downtime_Servidores
+AS
+SELECT
+	e.id_empresa,
+	d.fk_servidor,
+    s.nome_servidor,
+    s.local_servidor,
+    d.tempo_downtime,
+    d.prejuizo,
+    d.momento
+FROM Eyes_On_Server.Downtime d
+	JOIN Eyes_On_Server.Servidor s ON s.id_servidor = d.fk_servidor
+    JOIN Eyes_On_Server.Empresa e ON e.id_empresa = s.fk_empresa
+ORDER BY d.fk_servidor, s.local_servidor, d.momento DESC;
 
 -- ------------------- Procedures -------------------
 DELIMITER $$
@@ -593,9 +605,6 @@ END;
 
 DELIMITER ;
 
-insert into registro values (null, 1, 20, now());
-insert into registro values (null, 3, 20, now());
-insert into registro values (null, 7, 20, now());
-insert into registro values (null, 8, 20, now());
+Insert into registro values (null, 12, 20, "2023-11-18 18:00:00");
 
-select * from Eyes_On_Server.downtime;
+select sum(prejuizo), sum(tempo_downtime) from View_Downtime_Servidores where id_empresa = 3;
