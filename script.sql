@@ -76,24 +76,14 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Medida
     simbolo_medida VARCHAR(5)
 );
 
--- Tabela Comandos
-CREATE TABLE IF NOT EXISTS Eyes_On_Server.Comandos(
-	id_comandos INT PRIMARY KEY AUTO_INCREMENT,
-    nome_comando VARCHAR(120),
-    comando_java VARCHAR(120),
-    comando_python VARCHAR(120)
-);
-
 -- Taela ComponenteMedida
 CREATE TABLE IF NOT EXISTS Eyes_On_Server.Componente_Medida(
 	id_componente_medida INT PRIMARY KEY AUTO_INCREMENT,
     nome_componente_medida VARCHAR(120),
     fk_componente INT NOT NULL, 
     fk_medida INT NOT NULL,
-    fk_comando INT,
     FOREIGN KEY(fk_componente) REFERENCES Eyes_On_Server.Componente(id_componente),
-    FOREIGN KEY(fk_medida) REFERENCES Eyes_On_Server.Medida(id_medida),
-    FOREIGN KEY(fk_comando) REFERENCES Eyes_On_Server.Comandos(id_comandos)
+    FOREIGN KEY(fk_medida) REFERENCES Eyes_On_Server.Medida(id_medida)
 );
 
 -- Taela ComponenteServidor
@@ -203,23 +193,14 @@ INSERT INTO Eyes_On_Server.Medida VALUES
 (NULL, "bytesEnviados", "B"),
 (NULL, "bytesRecebidos", "B");
 
--- Tabela Comandos
-INSERT INTO Eyes_On_Server.Comandos VALUES
-(NULL, "Frequência da CPU", "org.example.looca.cpu.CpuFrequencia", ""),
-(NULL, "Uso da CPU", "org.example.looca.cpu.CpuUso", ""),
-(NULL, "Memória em Uso", "org.example.looca.memoria.MemoriaUso", ""),
-(NULL, "Disco em Uso", "org.example.looca.disco.DiscoUso", ""),
-(NULL, "Bytes Enviados", "org.example.looca.rede.RedeBytesEnviados", ""),
-(NULL, "Bytes Recebidos", "org.example.looca.rede.RedeBytesRecebidos", "");
-
 -- Tabela Componente Medida
 INSERT INTO Eyes_On_Server.Componente_Medida VALUES
-(NULL, "Uso da CPU (%)", 1, 2, 2),
-(NULL, "Frequência da CPU (Htz)", 1, 4, 1),
-(NULL, "Uso da Memória (%)", 2, 2, 3),
-(NULL, "Uso do Disco (%)", 3, 2, 4),
-(NULL, "Bytes Enviados", 4, 6, 5),
-(NULL, "Bytes Recebidos", 4, 7, 6);
+(NULL, "Uso da CPU (%)", 1, 2),
+(NULL, "Frequência da CPU (Htz)", 1, 4),
+(NULL, "Uso da Memória (%)", 2, 2),
+(NULL, "Uso do Disco (%)", 3, 2),
+(NULL, "Bytes Enviados", 4, 6),
+(NULL, "Bytes Recebidos", 4, 7);
 
 -- Tabela Componente Servidor
 INSERT INTO Eyes_On_Server.Componente_Servidor VALUES 
@@ -261,7 +242,6 @@ SELECT * FROM Eyes_On_Server.Login;
 SELECT * FROM Eyes_On_Server.Servidor;
 SELECT * FROM Eyes_On_Server.Componente;
 SELECT * FROM Eyes_On_Server.Medida;
-SELECT * FROM Eyes_On_Server.Comandos;
 SELECT * FROM Eyes_On_Server.Componente_Medida;
 SELECT * FROM Eyes_On_Server.Componente_Servidor;
 SELECT * FROM Eyes_On_Server.Processos;
@@ -456,17 +436,15 @@ SELECT
     s.so_servidor `sistemaOperacional`,
     s.mac_address `macAddress`,
     s.local_servidor `local`,
+    cm.id_componente_medida `idComponenteMedida`,
     c.nome_componente `componente`,
-    m.nome_medida `medida`,
-    cd.comando_java `comandoJava`,
-    cd.comando_python `comandoPython`
+    m.nome_medida `medida`
 FROM Eyes_On_Server.Empresa e
 	JOIN Eyes_On_Server.Servidor s on s.fk_empresa = e.id_empresa
     JOIN Eyes_On_Server.Componente_Servidor cs on cs.fk_servidor = s.id_servidor
     JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = cs.fk_componente_medida
     JOIN Eyes_On_Server.Componente c on cm.fk_componente = c.id_componente
-    JOIN Eyes_On_Server.Medida m on cm.fk_medida = m.id_medida
-    JOIN Eyes_On_Server.Comandos cd on cm.fk_comando = cd.id_comandos;
+    JOIN Eyes_On_Server.Medida m on cm.fk_medida = m.id_medida;
 
 -- Login, Usuario e Empresa
 CREATE OR REPLACE VIEW Eyes_On_Server.View_Login
@@ -546,19 +524,8 @@ PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
--- ---------------------------------
-
-SELECT max(momento_registro) FROM Eyes_On_Server.Registro r
-	JOIN Eyes_On_Server.Componente_Servidor cs ON cs.id_componente_servidor = r.fk_componente_servidor
-    JOIN Eyes_On_Server.Servidor s ON s.id_servidor = cs.fk_servidor
-    WHERE s.id_servidor = (
-		SELECT fk_servidor FROM Eyes_On_Server.Servidor s
-        JOIN Eyes_On_Server.Componente_Servidor cs ON cs.fk_servidor = s.id_servidor
-        LIMIT 1
-    );
-
 -- ------------------- Trigger -------------------
-select * from view_registros;
+
 DELIMITER //
 
 CREATE TRIGGER verificar_downtime
