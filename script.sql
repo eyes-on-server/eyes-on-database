@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Medida
 CREATE TABLE IF NOT EXISTS Eyes_On_Server.Componente_Medida(
 	id_componente_medida INT PRIMARY KEY AUTO_INCREMENT,
     nome_componente_medida VARCHAR(120),
+    tipo VARCHAR(80),
     fk_componente INT NOT NULL, 
     fk_medida INT NOT NULL,
     FOREIGN KEY(fk_componente) REFERENCES Eyes_On_Server.Componente(id_componente),
@@ -195,12 +196,14 @@ INSERT INTO Eyes_On_Server.Medida VALUES
 
 -- Tabela Componente Medida
 INSERT INTO Eyes_On_Server.Componente_Medida VALUES
-(NULL, "Uso da CPU (%)", 1, 2),
-(NULL, "Frequência da CPU (Htz)", 1, 4),
-(NULL, "Uso da Memória (%)", 2, 2),
-(NULL, "Uso do Disco (%)", 3, 2),
-(NULL, "Bytes Enviados", 4, 6),
-(NULL, "Bytes Recebidos", 4, 7);
+(NULL, "Uso da CPU (%)", "USO_PORCENTAGEM_CPU", 1, 2),
+(NULL, "Frequência da CPU (Htz)", "FREQUENCIA_CPU", 1, 4),
+(NULL, "Uso da Memória (%)", "USO_MEMORIA_PORCENTAGEM",  2, 2),
+(NULL, "Uso do Disco (%)", "USO_DISCO_PORCENTAGEM", 3, 2),
+(NULL, "Bytes Enviados", "BYTES_ENVIADOS_REDE", 4, 6),
+(NULL, "Bytes Recebidos", "BYTES_RECEBIDOS_REDE", 4, 7);
+
+select * from Componente_medida;
 
 -- Tabela Componente Servidor
 INSERT INTO Eyes_On_Server.Componente_Servidor VALUES 
@@ -436,9 +439,10 @@ SELECT
     s.so_servidor `sistemaOperacional`,
     s.mac_address `macAddress`,
     s.local_servidor `local`,
-    cm.id_componente_medida `idComponenteMedida`,
+    cm.tipo `Tipo`,
     c.nome_componente `componente`,
-    m.nome_medida `medida`
+    m.nome_medida `medida`,
+    cs.id_componente_servidor `idComponenteServidor` 
 FROM Eyes_On_Server.Empresa e
 	JOIN Eyes_On_Server.Servidor s on s.fk_empresa = e.id_empresa
     JOIN Eyes_On_Server.Componente_Servidor cs on cs.fk_servidor = s.id_servidor
