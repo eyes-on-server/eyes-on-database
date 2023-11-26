@@ -201,7 +201,8 @@ INSERT INTO Eyes_On_Server.Componente_Medida VALUES
 (NULL, "Uso da Memória (%)", "USO_MEMORIA_PORCENTAGEM",  2, 2),
 (NULL, "Uso do Disco (%)", "USO_DISCO_PORCENTAGEM", 3, 2),
 (NULL, "Bytes Enviados", "BYTES_ENVIADOS_REDE", 4, 6),
-(NULL, "Bytes Recebidos", "BYTES_RECEBIDOS_REDE", 4, 7);
+(NULL, "Bytes Recebidos", "BYTES_RECEBIDOS_REDE", 4, 7),
+(NULL, 'Temperatura da CPU (%)', 'TEMPERATURA_CPU', 1, 1);
 
 select * from Componente_medida;
 
