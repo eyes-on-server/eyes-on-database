@@ -76,24 +76,15 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Medida
     simbolo_medida VARCHAR(5)
 );
 
--- Tabela Comandos
-CREATE TABLE IF NOT EXISTS Eyes_On_Server.Comandos(
-	id_comandos INT PRIMARY KEY AUTO_INCREMENT,
-    nome_comando VARCHAR(120),
-    comando_java VARCHAR(120),
-    comando_python VARCHAR(120)
-);
-
 -- Taela ComponenteMedida
 CREATE TABLE IF NOT EXISTS Eyes_On_Server.Componente_Medida(
 	id_componente_medida INT PRIMARY KEY AUTO_INCREMENT,
     nome_componente_medida VARCHAR(120),
+    tipo VARCHAR(80),
     fk_componente INT NOT NULL, 
     fk_medida INT NOT NULL,
-    fk_comando INT,
     FOREIGN KEY(fk_componente) REFERENCES Eyes_On_Server.Componente(id_componente),
-    FOREIGN KEY(fk_medida) REFERENCES Eyes_On_Server.Medida(id_medida),
-    FOREIGN KEY(fk_comando) REFERENCES Eyes_On_Server.Comandos(id_comandos)
+    FOREIGN KEY(fk_medida) REFERENCES Eyes_On_Server.Medida(id_medida)
 );
 
 -- Taela ComponenteServidor
@@ -145,14 +136,6 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Downtime(
     FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor)
 );
 
-
-CREATE TABLE IF NOT EXISTS Eyes_On_Server.Consumo_Servidor(
-	id_consumo INT PRIMARY KEY AUTO_INCREMENT,
-    fk_servidor INT,
-	porcentagem_uso INT,
-	momento datetime,
-    FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor)
-);
 -- ------------------- Inserindo Dados -------------------
 
 -- Tabela Empresa
@@ -211,23 +194,17 @@ INSERT INTO Eyes_On_Server.Medida VALUES
 (NULL, "bytesEnviados", "B"),
 (NULL, "bytesRecebidos", "B");
 
--- Tabela Comandos
-INSERT INTO Eyes_On_Server.Comandos VALUES
-(NULL, "Frequência da CPU", "org.example.looca.cpu.CpuFrequencia", ""),
-(NULL, "Uso da CPU", "org.example.looca.cpu.CpuUso", ""),
-(NULL, "Memória em Uso", "org.example.looca.memoria.MemoriaUso", ""),
-(NULL, "Disco em Uso", "org.example.looca.disco.DiscoUso", ""),
-(NULL, "Bytes Enviados", "org.example.looca.rede.RedeBytesEnviados", ""),
-(NULL, "Bytes Recebidos", "org.example.looca.rede.RedeBytesRecebidos", "");
-
 -- Tabela Componente Medida
 INSERT INTO Eyes_On_Server.Componente_Medida VALUES
-(NULL, "Uso da CPU (%)", 1, 2, 2),
-(NULL, "Frequência da CPU (Htz)", 1, 4, 1),
-(NULL, "Uso da Memória (%)", 2, 2, 3),
-(NULL, "Uso do Disco (%)", 3, 2, 4),
-(NULL, "Bytes Enviados", 4, 6, 5),
-(NULL, "Bytes Recebidos", 4, 7, 6);
+(NULL, "Uso da CPU (%)", "USO_PORCENTAGEM_CPU", 1, 2),
+(NULL, "Frequência da CPU (Htz)", "FREQUENCIA_CPU", 1, 4),
+(NULL, "Uso da Memória (%)", "USO_MEMORIA_PORCENTAGEM",  2, 2),
+(NULL, "Uso do Disco (%)", "USO_DISCO_PORCENTAGEM", 3, 2),
+(NULL, "Bytes Enviados", "BYTES_ENVIADOS_REDE", 4, 6),
+(NULL, "Bytes Recebidos", "BYTES_RECEBIDOS_REDE", 4, 7),
+(NULL, 'Temperatura da CPU (%)', 'TEMPERATURA_CPU', 1, 1);
+
+select * from Componente_medida;
 
 -- Tabela Componente Servidor
 INSERT INTO Eyes_On_Server.Componente_Servidor VALUES 
@@ -269,13 +246,11 @@ SELECT * FROM Eyes_On_Server.Login;
 SELECT * FROM Eyes_On_Server.Servidor;
 SELECT * FROM Eyes_On_Server.Componente;
 SELECT * FROM Eyes_On_Server.Medida;
-SELECT * FROM Eyes_On_Server.Comandos;
 SELECT * FROM Eyes_On_Server.Componente_Medida;
 SELECT * FROM Eyes_On_Server.Componente_Servidor;
 SELECT * FROM Eyes_On_Server.Processos;
 SELECT * FROM Eyes_On_Server.Registro;
 SELECT * FROM Eyes_On_Server.Downtime;
-SELECT * FROM  Eyes_On_Server.Consumo_Servidor;
 
 -- ------------------- Joins -------------------
 
@@ -465,17 +440,16 @@ SELECT
     s.so_servidor `sistemaOperacional`,
     s.mac_address `macAddress`,
     s.local_servidor `local`,
+    cm.tipo `Tipo`,
     c.nome_componente `componente`,
     m.nome_medida `medida`,
-    cd.comando_java `comandoJava`,
-    cd.comando_python `comandoPython`
+    cs.id_componente_servidor `idComponenteServidor` 
 FROM Eyes_On_Server.Empresa e
 	JOIN Eyes_On_Server.Servidor s on s.fk_empresa = e.id_empresa
     JOIN Eyes_On_Server.Componente_Servidor cs on cs.fk_servidor = s.id_servidor
     JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = cs.fk_componente_medida
     JOIN Eyes_On_Server.Componente c on cm.fk_componente = c.id_componente
-    JOIN Eyes_On_Server.Medida m on cm.fk_medida = m.id_medida
-    JOIN Eyes_On_Server.Comandos cd on cm.fk_comando = cd.id_comandos;
+    JOIN Eyes_On_Server.Medida m on cm.fk_medida = m.id_medida;
 
 -- Login, Usuario e Empresa
 CREATE OR REPLACE VIEW Eyes_On_Server.View_Login
@@ -493,15 +467,15 @@ CREATE OR REPLACE VIEW View_Downtime_Servidores
 AS
 SELECT
 	e.id_empresa,
-	d.fk_servidor,
+	s.id_servidor,
     s.nome_servidor,
     s.local_servidor,
-    d.tempo_downtime,
-    d.prejuizo,
-    d.momento
+    COALESCE(d.tempo_downtime,0) tempo_downtime,
+    COALESCE(d.prejuizo,0) prejuizo,
+    COALESCE(d.momento,0) momento
 FROM Eyes_On_Server.Downtime d
-	JOIN Eyes_On_Server.Servidor s ON s.id_servidor = d.fk_servidor
-    JOIN Eyes_On_Server.Empresa e ON e.id_empresa = s.fk_empresa
+	RIGHT JOIN Eyes_On_Server.Servidor s ON s.id_servidor = d.fk_servidor
+	JOIN Eyes_On_Server.Empresa e ON e.id_empresa = s.fk_empresa
 ORDER BY d.fk_servidor, s.local_servidor, d.momento DESC;
 
 -- ------------------- Procedures -------------------
@@ -554,66 +528,3 @@ ORDER BY Momento DESC');
 PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
-
--- ---------------------------------
-
-SELECT max(momento_registro) FROM Eyes_On_Server.Registro r
-	JOIN Eyes_On_Server.Componente_Servidor cs ON cs.id_componente_servidor = r.fk_componente_servidor
-    JOIN Eyes_On_Server.Servidor s ON s.id_servidor = cs.fk_servidor
-    WHERE s.id_servidor = (
-		SELECT fk_servidor FROM Eyes_On_Server.Servidor s
-        JOIN Eyes_On_Server.Componente_Servidor cs ON cs.fk_servidor = s.id_servidor
-        LIMIT 1
-    );
-
--- ------------------- Trigger -------------------
-select * from view_registros;
-DELIMITER //
-
-CREATE TRIGGER verificar_downtime
-AFTER INSERT ON Eyes_On_Server.Registro
-FOR EACH ROW
-BEGIN
-    DECLARE ultimo_momento_registro DATETIME;
-    DECLARE penultimo_momento_registro DATETIME;
-    DECLARE diferenca_segundos INT;
-    DECLARE fk_servidor INT;
-    DECLARE prejuizo_por_segundo DECIMAL (63,1);
-    DECLARE margem INT;
-    
-    SET margem = 25;
-    SET prejuizo_por_segundo = 1111111.1;
-	
-    SELECT cs.fk_servidor INTO fk_servidor
-    FROM Eyes_On_Server.Registro r
-		JOIN Eyes_On_Server.Componente_Servidor cs ON cs.id_componente_servidor = r.fk_componente_servidor
-		JOIN Eyes_On_Server.Servidor s on s.id_servidor = cs.fk_servidor
-    WHERE id_componente_servidor = NEW.fk_componente_servidor
-    LIMIT 1;
-    
-    SELECT MAX(Momento) INTO ultimo_momento_registro
-    FROM View_Registros
-    WHERE Servidor = fk_servidor;
-    
-    SELECT MAX(Momento) INTO penultimo_momento_registro
-    FROM View_Registros
-    WHERE Servidor = fk_servidor AND Momento < ultimo_momento_registro;
-    
-    IF penultimo_momento_registro IS NOT NULL 
-    THEN
-		SET diferenca_segundos = TIMESTAMPDIFF(SECOND, penultimo_momento_registro, ultimo_momento_registro);
-        
-		IF diferenca_segundos > margem
-        THEN
-			INSERT INTO Eyes_On_Server.Downtime VALUES (NULL, fk_servidor, diferenca_segundos - margem, (diferenca_segundos - margem) * prejuizo_por_segundo, now());
-		END IF;
-        
-	END IF;
-END;
-//
-
-DELIMITER ;
-
-Insert into registro values (null, 12, 20, "2023-11-18 18:00:00");
-
-select sum(prejuizo), sum(tempo_downtime) from View_Downtime_Servidores where id_empresa = 3;
