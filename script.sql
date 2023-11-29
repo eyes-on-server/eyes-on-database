@@ -447,15 +447,20 @@ SELECT
     s.so_servidor `sistemaOperacional`,
     s.mac_address `macAddress`,
     s.local_servidor `local`,
+    cm.tipo `Tipo`,
     c.nome_componente `componente`,
     m.nome_medida `medida`,
-    cm.tipo = `Tipo`
+    cs.id_componente_servidor `idComponenteServidor` 
 FROM Eyes_On_Server.Empresa e
 	JOIN Eyes_On_Server.Servidor s on s.fk_empresa = e.id_empresa
     JOIN Eyes_On_Server.Componente_Servidor cs on cs.fk_servidor = s.id_servidor
     JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = cs.fk_componente_medida
     JOIN Eyes_On_Server.Componente c on cm.fk_componente = c.id_componente
     JOIN Eyes_On_Server.Medida m on cm.fk_medida = m.id_medida;
+
+SELECT * from Eyes_On_Server.view_componentes_servidores;
+select servidor, tipo from Eyes_On_Server.view_componentes_servidores  
+                     where servidor = "Servidor PA404";
 
 -- Login, Usuario e Empresa
 CREATE OR REPLACE VIEW Eyes_On_Server.View_Login
@@ -534,5 +539,4 @@ ORDER BY Momento DESC');
 PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
-
 -- ---------------------------------
