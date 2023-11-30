@@ -144,6 +144,16 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Consumo_Servidor(
 	momento datetime,
     FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor)
 );
+
+CREATE TABLE IF NOT EXISTS percentQueda(
+	fk_empresa INT,
+    fk_servidor INT,
+    dataRegistro date,
+    percentDiario INT,
+    percentPrevisto INT,
+    FOREIGN KEY (fk_empresa) REFERENCES empresa(id_empresa),
+    FOREIGN KEY (fk_servidor) references Servidor(id_servidor)
+);
 -- ------------------- Inserindo Dados -------------------
 
 -- Tabela Empresa
@@ -242,6 +252,20 @@ INSERT INTO Eyes_On_Server.Componente_Servidor VALUES
 (NULL, 6, 4),
 (NULL, 6, 5),
 (NULL, 6, 6);
+
+INSERT INTO percentQueda (fk_empresa, fk_servidor, dataRegistro, percentDiario, percentPrevisto) VALUES
+(3, 1, '2023-11-01', 5, 7),
+(3, 2, '2023-11-01', 6, 8),
+(3, 3, '2023-11-01', 4, 6),
+(3, 4, '2023-11-01', 7, 9),
+(3, 5, '2023-11-01', 8, 10),
+(3, 6, '2023-11-01', 6, 8),
+(3, 1, '2023-11-02', 10, 12),
+(3, 2, '2023-11-02', 8, 10),
+(3, 3, '2023-11-02', 3, 5),
+(3, 4, '2023-11-02', 4, 6),
+(3, 5, '2023-11-02', 2, 4),
+(3, 6, '2023-11-02', 6, 8);
 
 -- ------------------- Selects -------------------
 
@@ -488,6 +512,21 @@ FROM Eyes_On_Server.Downtime d
 	JOIN Eyes_On_Server.Servidor s ON s.id_servidor = d.fk_servidor
     JOIN Eyes_On_Server.Empresa e ON e.id_empresa = s.fk_empresa
 ORDER BY d.fk_servidor, s.local_servidor, d.momento DESC;
+
+CREATE OR REPLACE VIEW View_PercentQueda_Servidores
+AS
+SELECT
+	e.id_empresa,
+	s.id_servidor,
+    s.nome_servidor,
+    s.local_servidor,
+    COALESCE(p.percentDiario, 0) chanceDiaria,
+    COALESCE(p.percentPrevisto,0) chancePrevisto,
+    p.dataRegistro
+FROM Eyes_On_Server.percentQueda p
+	RIGHT JOIN Eyes_On_Server.Servidor s ON s.id_servidor = p.fk_servidor
+	JOIN Eyes_On_Server.Empresa e ON e.id_empresa = s.fk_empresa
+ORDER BY p.fk_servidor, s.local_servidor, p.dataRegistro DESC;
 
 -- ------------------- Procedures -------------------
 DELIMITER $$
