@@ -479,6 +479,25 @@ AS
 	  WHERE DATE(data_hora_abertura) = CURDATE()
 	  GROUP BY fk_servidor
 	) a ON s.id_servidor = a.fk_servidor;
+    
+-- View Tipo Alertas
+CREATE OR REPLACE VIEW View_Tipo_Alerta
+AS
+SELECT
+	a.fk_empresa,
+    id_alertas,
+    a.fk_servidor,
+    s.local_servidor,
+    fk_componente,
+    data_hora_abertura,
+    tipoAlerta,
+    nivel_de_risco,
+    CASE WHEN fk_componente = 1 THEN 1 ELSE 0 END alerta_cpu,
+    CASE WHEN fk_componente = 2 THEN 1 ELSE 0 END alerta_memoria,
+    CASE WHEN fk_componente = 3 THEN 1 ELSE 0 END alerta_disco
+FROM View_Alertas a
+	JOIN Eyes_On_Server.Servidor s ON s.id_servidor = a.fk_servidor
+    JOIN Eyes_On_Server.view_riscos_servidores vs ON vs.id_servidor = a.fk_servidor;
 
 -- Empresa, Servidor, Componente, Medida
 CREATE OR REPLACE VIEW Eyes_On_Server.view_componentes_servidores
