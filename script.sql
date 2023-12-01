@@ -115,14 +115,14 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Alertas
 	id_alertas INT PRIMARY KEY AUTO_INCREMENT,
     fk_empresa INT,
     fk_servidor INT,
-    fk_componente INT,
+    fk_componente_medida INT,
     titulo_alerta VARCHAR(120),
     descricao_alerta TEXT,
     data_hora_abertura DATETIME,
     tipoAlerta VARCHAR(10),
     FOREIGN KEY(fk_empresa) REFERENCES Eyes_On_Server.Empresa(id_empresa),
     FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor),
-    FOREIGN KEY(fk_componente) REFERENCES Eyes_On_Server.Componente(id_componente)
+    FOREIGN KEY(fk_componente_medida) REFERENCES Eyes_On_Server.Componente_Medida(id_componente_medida)
 );
 -- Tipos de chamados: 
 -- 0: Prevenção 
@@ -412,6 +412,21 @@ FROM Eyes_On_Server.Registro r
     JOIN Eyes_On_Server.Servidor s ON s.id_servidor = cs.fk_servidor AND cs.fk_servidor = 6
 ORDER BY Momento);
 
+-- View Alertas
+CREATE OR REPLACE VIEW View_Alertas 
+AS
+SELECT
+	id_alertas, 
+    fk_empresa, 
+    fk_servidor, 
+    fk_componente,
+    data_hora_abertura,
+    tipoAlerta
+FROM Eyes_On_Server.Alertas a
+	JOIN Eyes_On_Server.Componente_Medida cm ON a.fk_componente_medida = cm.id_componente_medida
+    JOIN Eyes_On_Server.Componente c ON c.id_componente = cm.fk_componente
+ORDER BY id_alertas;
+
 -- View dos Tipos de Risco de cada Servidor
 CREATE OR REPLACE VIEW Eyes_On_Server.view_riscos_servidores 
 AS
@@ -485,10 +500,6 @@ FROM Eyes_On_Server.Empresa e
     JOIN Eyes_On_Server.Componente c on cm.fk_componente = c.id_componente
     JOIN Eyes_On_Server.Medida m on cm.fk_medida = m.id_medida;
 
-SELECT * from Eyes_On_Server.view_componentes_servidores;
-select servidor, tipo from Eyes_On_Server.view_componentes_servidores  
-                     where servidor = "Servidor PA404";
-
 -- Login, Usuario e Empresa
 CREATE OR REPLACE VIEW Eyes_On_Server.View_Login
 AS
@@ -501,6 +512,7 @@ FROM Eyes_On_Server.Login l
 	JOIN Eyes_On_Server.Usuario u ON u.id_usuario = l.fk_usuario
     JOIN Eyes_On_Server.Empresa e ON e.id_empresa = u.fk_empresa;
 
+-- View Downtime
 CREATE OR REPLACE VIEW View_Downtime_Servidores
 AS
 SELECT
@@ -516,6 +528,7 @@ FROM Eyes_On_Server.Downtime d
     JOIN Eyes_On_Server.Empresa e ON e.id_empresa = s.fk_empresa
 ORDER BY d.fk_servidor, s.local_servidor, d.momento DESC;
 
+-- View Percentual de Queda
 CREATE OR REPLACE VIEW View_PercentQueda_Servidores
 AS
 SELECT
