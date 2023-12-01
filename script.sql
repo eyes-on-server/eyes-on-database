@@ -478,6 +478,8 @@ SELECT
     fk_empresa, 
     fk_servidor, 
     fk_componente,
+    titulo_alerta,
+    descricao_alerta,
     data_hora_abertura,
     tipoAlerta
 FROM Eyes_On_Server.Alertas a
