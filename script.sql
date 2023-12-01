@@ -81,6 +81,9 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Componente_Medida(
 	id_componente_medida INT PRIMARY KEY AUTO_INCREMENT,
     nome_componente_medida VARCHAR(120),
     tipo VARCHAR(80),
+    valor_alerta_emergencia INT,
+    valor_alerta_perigo INT,
+    valor_alerta_prevencao INT,
     fk_componente INT NOT NULL, 
     fk_medida INT NOT NULL,
     FOREIGN KEY(fk_componente) REFERENCES Eyes_On_Server.Componente(id_componente),
@@ -214,13 +217,13 @@ INSERT INTO Eyes_On_Server.Medida VALUES
 
 -- Tabela Componente Medida
 INSERT INTO Eyes_On_Server.Componente_Medida VALUES
-(NULL, "Uso da CPU (%)", "USO_PORCENTAGEM_CPU", 1, 2),
-(NULL, "Frequência da CPU (Htz)", "FREQUENCIA_CPU", 1, 4),
-(NULL, "Uso da Memória (%)", "USO_MEMORIA_PORCENTAGEM",  2, 2),
-(NULL, "Uso do Disco (%)", "USO_DISCO_PORCENTAGEM", 3, 2),
-(NULL, "Bytes Enviados", "BYTES_ENVIADOS_REDE", 4, 6),
-(NULL, "Bytes Recebidos", "BYTES_RECEBIDOS_REDE", 4, 7),
-(NULL, 'Temperatura da CPU (%)', 'TEMPERATURA_CPU', 1, 1);
+(NULL, "Uso da CPU (%)", "USO_PORCENTAGEM_CPU", 95, 85, 75, 1, 2),
+(NULL, "Frequência da CPU (Htz)", "FREQUENCIA_CPU", NULL, NULL, NULL, 1, 4),
+(NULL, "Uso da Memória (%)", "USO_MEMORIA_PORCENTAGEM", 80, 75, 70, 2, 2),
+(NULL, "Uso do Disco (%)", "USO_DISCO_PORCENTAGEM", 95, 90, 85, 3, 2),
+(NULL, "Bytes Enviados", "BYTES_ENVIADOS_REDE", NULL, NULL, NULL, 4, 6),
+(NULL, "Bytes Recebidos", "BYTES_RECEBIDOS_REDE", NULL, NULL, NULL, 4, 7),
+(NULL, 'Temperatura da CPU (%)', 'TEMPERATURA_CPU', NULL, NULL, NULL, 1, 1);
 
 -- Tabela Componente Servidor
 INSERT INTO Eyes_On_Server.Componente_Servidor VALUES 
