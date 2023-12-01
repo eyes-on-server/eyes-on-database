@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.Downtime(
     FOREIGN KEY(fk_servidor) REFERENCES Eyes_On_Server.Servidor(id_servidor)
 );
 
-
+-- Tabela da porcentagem de consumo do servidor
 CREATE TABLE IF NOT EXISTS Eyes_On_Server.Consumo_Servidor(
 	id_consumo INT PRIMARY KEY AUTO_INCREMENT,
     fk_servidor INT,
@@ -157,6 +157,63 @@ CREATE TABLE IF NOT EXISTS percentQueda(
     FOREIGN KEY (fk_empresa) REFERENCES Empresa(id_empresa),
     FOREIGN KEY (fk_servidor) references Servidor(id_servidor)
 );
+
+-- Tabela de datas comemorativas do ano 
+CREATE TABLE IF NOT EXISTS Eyes_On_Server.E_Comerce(
+	id_feriado INT PRIMARY KEY AUTO_INCREMENT,
+    nome_ferado CHAR(50),
+	mes_feriado CHAR(50),
+	prioridade_feriado CHAR(50)
+);
+
+-- Tabela E-comerce 
+INSERT INTO Eyes_On_Server.E_Comerce (nome_ferado, mes_feriado, prioridade_feriado)VALUES
+('Ano novo', 'Janeiro', 'alta'),
+('Dia do cabeleleiro', 'Janeiro', 'baixa'),
+('Dia da Gula', 'Janeiro', 'média'),
+('Dia da saudade', 'Janeiro', 'baixa'),
+("Valentine's day", 'Fevereiro', 'média'),
+("Dia do esportista", 'Fevereiro', 'baixa'),
+("Carnaval", 'Fevereiro', 'alta'),
+("Dia da mulher", 'Março', 'média'),
+("Dia do consumidor", 'Março', 'média'),
+("Início do outono", 'Março', 'baixa'),
+("Páscoa", 'Abril', 'alta'),
+("Dia do beijo", 'Abril', 'baixa'),
+("Dia do livro", 'Abril', 'média'),
+("Dia do frete grátis", 'Abril', 'média'),
+("Dia do trabalhador", 'Maio', 'baixa'),
+("Dia das mães", 'Maio', 'alta'),
+("Dia do orgulho nerd", 'Maio', 'baixa'),
+("Dia do hamburguer", 'Maio', 'baixa'),
+("Início do inverno", 'Junho', 'baixa'),
+("Dia de São João", 'Junho', 'alta'),
+("Dia do orgulho LGBT", 'Junho', 'baixa'),
+("Período de férias", 'Junho', 'alta'),
+("Dia da pizza", 'Julho', 'baixa'),
+("Dia do rock", 'Julho', 'baixa'),
+("Dia do futebol", 'Julho', 'baixa'),
+("Dia dos avós", 'Julho', 'baixa'),
+("Dia do amigo", 'Julho', 'baixa'),
+("Período de férias", 'Julho', 'alta'),
+("Dia dos pais", 'Agosto', 'alta'),
+("Dia dos solteiros", 'Agosto', 'baixa'),
+("Semana do Brasil", 'Setembro', 'baixa'),
+("Dia da cachaça", 'Setembro', 'média'),
+("Dia do cliente", 'Setembro', 'média'),
+("Início da primavera", 'Setembro', 'baixa'),
+("Dia dos animais", 'Outubro', 'baixa'),
+("Dia das crianças", 'Outubro', 'alta'),
+("Dia dos professores", 'Outubro', 'média'),
+("Dia da decoração", 'Outubro', 'baixa'),
+("Dia das Bruxas", 'Outubro', 'média'),
+("Dia do veganismo", 'Novembro', 'baixa'),
+("Black Friday", 'Novembro', 'alta'),
+("Cyber Day", 'Novembro', 'baixa'),
+("Início do Verão", 'Dezembro', 'baixa'),
+("Natal", 'Dezembro', 'alta'),
+("Réveillon", 'Dezembro', 'alta');
+
 -- ------------------- Inserindo Dados -------------------
 
 -- Tabela Empresa
@@ -285,6 +342,7 @@ SELECT * FROM Eyes_On_Server.Processos;
 SELECT * FROM Eyes_On_Server.Registro;
 SELECT * FROM Eyes_On_Server.Downtime;
 SELECT * FROM Eyes_On_Server.Consumo_Servidor;
+SELECT * FROM Eyes_On_Server.E_Comerce;
 
 -- ------------------- Joins -------------------
 
