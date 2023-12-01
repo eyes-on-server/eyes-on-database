@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS percentQueda(
     dataRegistro date,
     percentDiario INT,
     percentPrevisto INT,
-    FOREIGN KEY (fk_empresa) REFERENCES empresa(id_empresa),
+    FOREIGN KEY (fk_empresa) REFERENCES Empresa(id_empresa),
     FOREIGN KEY (fk_servidor) references Servidor(id_servidor)
 );
 -- ------------------- Inserindo Dados -------------------
