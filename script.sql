@@ -163,56 +163,10 @@ CREATE TABLE IF NOT EXISTS Eyes_On_Server.E_Comerce(
 	id_feriado INT PRIMARY KEY AUTO_INCREMENT,
     nome_ferado CHAR(50),
 	mes_feriado CHAR(50),
-	prioridade_feriado CHAR(50)
+	prioridade_feriado CHAR(50),
+    valor_prioridade INT
 );
 
--- Tabela E-comerce 
-INSERT INTO Eyes_On_Server.E_Comerce (nome_ferado, mes_feriado, prioridade_feriado)VALUES
-('Ano novo', 'Janeiro', 'alta'),
-('Dia do cabeleleiro', 'Janeiro', 'baixa'),
-('Dia da Gula', 'Janeiro', 'média'),
-('Dia da saudade', 'Janeiro', 'baixa'),
-("Valentine's day", 'Fevereiro', 'média'),
-("Dia do esportista", 'Fevereiro', 'baixa'),
-("Carnaval", 'Fevereiro', 'alta'),
-("Dia da mulher", 'Março', 'média'),
-("Dia do consumidor", 'Março', 'média'),
-("Início do outono", 'Março', 'baixa'),
-("Páscoa", 'Abril', 'alta'),
-("Dia do beijo", 'Abril', 'baixa'),
-("Dia do livro", 'Abril', 'média'),
-("Dia do frete grátis", 'Abril', 'média'),
-("Dia do trabalhador", 'Maio', 'baixa'),
-("Dia das mães", 'Maio', 'alta'),
-("Dia do orgulho nerd", 'Maio', 'baixa'),
-("Dia do hamburguer", 'Maio', 'baixa'),
-("Início do inverno", 'Junho', 'baixa'),
-("Dia de São João", 'Junho', 'alta'),
-("Dia do orgulho LGBT", 'Junho', 'baixa'),
-("Período de férias", 'Junho', 'alta'),
-("Dia da pizza", 'Julho', 'baixa'),
-("Dia do rock", 'Julho', 'baixa'),
-("Dia do futebol", 'Julho', 'baixa'),
-("Dia dos avós", 'Julho', 'baixa'),
-("Dia do amigo", 'Julho', 'baixa'),
-("Período de férias", 'Julho', 'alta'),
-("Dia dos pais", 'Agosto', 'alta'),
-("Dia dos solteiros", 'Agosto', 'baixa'),
-("Semana do Brasil", 'Setembro', 'baixa'),
-("Dia da cachaça", 'Setembro', 'média'),
-("Dia do cliente", 'Setembro', 'média'),
-("Início da primavera", 'Setembro', 'baixa'),
-("Dia dos animais", 'Outubro', 'baixa'),
-("Dia das crianças", 'Outubro', 'alta'),
-("Dia dos professores", 'Outubro', 'média'),
-("Dia da decoração", 'Outubro', 'baixa'),
-("Dia das Bruxas", 'Outubro', 'média'),
-("Dia do veganismo", 'Novembro', 'baixa'),
-("Black Friday", 'Novembro', 'alta'),
-("Cyber Day", 'Novembro', 'baixa'),
-("Início do Verão", 'Dezembro', 'baixa'),
-("Natal", 'Dezembro', 'alta'),
-("Réveillon", 'Dezembro', 'alta');
 
 -- ------------------- Inserindo Dados -------------------
 
@@ -327,6 +281,55 @@ INSERT INTO percentQueda (fk_empresa, fk_servidor, dataRegistro, percentDiario, 
 (3, 5, '2023-11-02', 2, 4),
 (3, 6, '2023-11-02', 6, 8);
 
+
+-- Tabela E-comerce 
+INSERT INTO Eyes_On_Server.E_Comerce (nome_ferado, mes_feriado, prioridade_feriado)VALUES
+('Ano novo', 'Janeiro', 'alta'),
+('Dia do cabeleleiro', 'Janeiro', 'baixa'),
+('Dia da Gula', 'Janeiro', 'média'),
+('Dia da saudade', 'Janeiro', 'baixa'),
+("Valentine's day", 'Fevereiro', 'média'),
+("Dia do esportista", 'Fevereiro', 'baixa'),
+("Carnaval", 'Fevereiro', 'alta'),
+("Dia da mulher", 'Março', 'média'),
+("Dia do consumidor", 'Março', 'média'),
+("Início do outono", 'Março', 'baixa'),
+("Páscoa", 'Abril', 'alta'),
+("Dia do beijo", 'Abril', 'baixa'),
+("Dia do livro", 'Abril', 'média'),
+("Dia do frete grátis", 'Abril', 'média'),
+("Dia do trabalhador", 'Maio', 'baixa'),
+("Dia das mães", 'Maio', 'alta'),
+("Dia do orgulho nerd", 'Maio', 'baixa'),
+("Dia do hamburguer", 'Maio', 'baixa'),
+("Início do inverno", 'Junho', 'baixa'),
+("Dia de São João", 'Junho', 'alta'),
+("Dia do orgulho LGBT", 'Junho', 'baixa'),
+("Período de férias", 'Junho', 'alta'),
+("Dia da pizza", 'Julho', 'baixa'),
+("Dia do rock", 'Julho', 'baixa'),
+("Dia do futebol", 'Julho', 'baixa'),
+("Dia dos avós", 'Julho', 'baixa'),
+("Dia do amigo", 'Julho', 'baixa'),
+("Período de férias", 'Julho', 'alta'),
+("Dia dos pais", 'Agosto', 'alta'),
+("Dia dos solteiros", 'Agosto', 'baixa'),
+("Semana do Brasil", 'Setembro', 'baixa'),
+("Dia da cachaça", 'Setembro', 'média'),
+("Dia do cliente", 'Setembro', 'média'),
+("Início da primavera", 'Setembro', 'baixa'),
+("Dia dos animais", 'Outubro', 'baixa'),
+("Dia das crianças", 'Outubro', 'alta'),
+("Dia dos professores", 'Outubro', 'média'),
+("Dia da decoração", 'Outubro', 'baixa'),
+("Dia das Bruxas", 'Outubro', 'média'),
+("Dia do veganismo", 'Novembro', 'baixa'),
+("Black Friday", 'Novembro', 'alta'),
+("Cyber Day", 'Novembro', 'baixa'),
+("Início do Verão", 'Dezembro', 'baixa'),
+("Natal", 'Dezembro', 'alta'),
+("Réveillon", 'Dezembro', 'alta');
+
 -- ------------------- Selects -------------------
 
 SELECT * FROM Eyes_On_Server.Empresa;
@@ -344,6 +347,26 @@ SELECT * FROM Eyes_On_Server.Downtime;
 SELECT * FROM Eyes_On_Server.Consumo_Servidor;
 SELECT * FROM Eyes_On_Server.E_Comerce;
 
+
+SELECT (SELECT COUNT(nome_ferado) FROM Eyes_On_Server.Consumo_Servidor WHERE mes_feriado LIKE 'Janeiro')  as 'qtd feriados Janeiro',
+		(SELECT COUNT(nome_ferado) FROM Eyes_On_Server.Consumo_Servidor WHERE mes_feriado LIKE 'Fevereiro') as 'qtd feriados Fevereiro',
+		(SELECT COUNT(nome_ferado) FROM Eyes_On_Server.Consumo_Servidor WHERE mes_feriado LIKE 'Março') as 'qtd feriados Março',
+		(SELECT COUNT(nome_ferado) FROM Eyes_On_Server.Consumo_Servidor WHERE mes_feriado LIKE 'Abril') as 'qtd feriados Abril',
+		(SELECT COUNT(nome_ferado) FROM Eyes_On_Server.Consumo_Servidor WHERE mes_feriado LIKE 'Maio') as 'qtd feriados Maio',
+		(SELECT COUNT(nome_ferado) FROM Eyes_On_Server.Consumo_Servidor WHERE mes_feriado LIKE 'Junho') as 'qtd feriados Junho',
+		(SELECT COUNT(nome_ferado) FROM Eyes_On_Server.Consumo_Servidor WHERE mes_feriado LIKE 'Julho') as 'qtd feriados Julho',
+		(SELECT COUNT(nome_ferado) FROM Eyes_On_Server.Consumo_Servidor WHERE mes_feriado LIKE 'Agosto') as 'qtd feriados Agosto',
+		(SELECT COUNT(nome_ferado) FROM Eyes_On_Server.Consumo_Servidor WHERE mes_feriado LIKE 'Setembro') as 'qtd feriados Setembro',
+		(SELECT COUNT(nome_ferado) FROM Eyes_On_Server.Consumo_Servidor WHERE mes_feriado LIKE 'Outubro') as 'qtd feriados Outubro',
+		(SELECT COUNT(nome_ferado) FROM Eyes_On_Server.Consumo_Servidor WHERE mes_feriado LIKE 'Novembro') as 'qtd feriados Novembro',
+		(SELECT COUNT(nome_ferado) FROM Eyes_On_Server.Consumo_Servidor WHERE mes_feriado LIKE 'Dezembro') as 'qtd feriados Dezembro'
+ FROM Eyes_On_Server.E_Comerce limit 1;
+
+SELECT COUNT(nome_ferado)  as 'qtd feriados Janeiro' FROM Eyes_On_Server.E_Comerce WHERE mes_feriado LIKE 'Janeiro' and prioridade_feriado LIKE 'baixa';
+
+UPDATE Eyes_On_Server.E_Comerce SET valor_prioridade = 2 WHERE mes_feriado LIKE 'Janeiro';
+
+
 -- ------------------- Joins -------------------
 
 -- Funcionários, Empresa, Login
@@ -356,6 +379,24 @@ SELECT
 FROM Eyes_On_Server.Usuario u
 	join Eyes_On_Server.Empresa e on u.fk_empresa = e.id_empresa
 	join Eyes_On_Server.Login l on l.fk_usuario = u.id_usuario;
+    
+    SELECT 
+		(SELECT AVG(porcentagem_uso) FROM Eyes_On_Server.Consumo_Servidor WHERE YEAR(momento) = YEAR(NOW()) AND momento LIKE '_____01%' AND fk_servidor = 7) as "média Janeiro",
+		(SELECT AVG(porcentagem_uso) FROM Eyes_On_Server.Consumo_Servidor WHERE YEAR(momento) = YEAR(NOW()) AND momento LIKE '_____02%' AND fk_servidor = 7) as "média Fevereiro",
+		(SELECT AVG(porcentagem_uso) FROM Eyes_On_Server.Consumo_Servidor WHERE YEAR(momento) = YEAR(NOW()) AND momento LIKE '_____03%' AND fk_servidor = 7) as "média Março",
+		(SELECT AVG(porcentagem_uso) FROM Eyes_On_Server.Consumo_Servidor WHERE YEAR(momento) = YEAR(NOW()) AND momento LIKE '_____04%' AND fk_servidor = 7) as "média Abril",
+		(SELECT AVG(porcentagem_uso) FROM Eyes_On_Server.Consumo_Servidor WHERE YEAR(momento) = YEAR(NOW()) AND momento LIKE '_____05%' AND fk_servidor = 7) as "média Maio",
+		(SELECT AVG(porcentagem_uso) FROM Eyes_On_Server.Consumo_Servidor WHERE YEAR(momento) = YEAR(NOW()) AND momento LIKE '_____06%' AND fk_servidor = 7) as "média Junho",
+		(SELECT AVG(porcentagem_uso) FROM Eyes_On_Server.Consumo_Servidor WHERE YEAR(momento) = YEAR(NOW()) AND momento LIKE '_____07%' AND fk_servidor = 7) as "média Julho",
+		(SELECT AVG(porcentagem_uso) FROM Eyes_On_Server.Consumo_Servidor WHERE YEAR(momento) = YEAR(NOW()) AND momento LIKE '_____08%' AND fk_servidor = 7) as "média Agosto",
+		(SELECT AVG(porcentagem_uso) FROM Eyes_On_Server.Consumo_Servidor WHERE YEAR(momento) = YEAR(NOW()) AND momento LIKE '_____09%' AND fk_servidor = 7) as "média Setembro",
+		(SELECT AVG(porcentagem_uso) FROM Eyes_On_Server.Consumo_Servidor WHERE YEAR(momento) = YEAR(NOW()) AND momento LIKE '_____10%' AND fk_servidor = 7) as "média Outubro",
+		(SELECT AVG(porcentagem_uso) FROM Eyes_On_Server.Consumo_Servidor WHERE YEAR(momento) = YEAR(NOW()) AND momento LIKE '_____11%' AND fk_servidor = 7) as "média Novembro",
+		(SELECT AVG(porcentagem_uso) FROM Eyes_On_Server.Consumo_Servidor WHERE YEAR(momento) = YEAR(NOW()) AND momento LIKE '_____12%' AND fk_servidor = 7) as "média Dezembro"
+FROM Eyes_On_Server.Consumo_Servidor CS
+JOIN Eyes_On_Server.Servidor S ON CS.fk_servidor = S.id_servidor
+WHERE S.fk_empresa = 3
+GROUP BY fk_servidor;
 
 -- ------------------- Views -------------------
 -- View Todos Registros
@@ -369,9 +410,9 @@ SELECT
 FROM Eyes_On_Server.Registro r
 	JOIN Eyes_On_Server.Componente_Servidor cs on cs.id_componente_servidor = r.fk_componente_servidor
 	JOIN Eyes_On_Server.Componente_Medida cm on cm.id_componente_medida = cs.fk_componente_medida 
-	join Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
-	join Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
-    join Eyes_On_Server.Servidor s on s.id_servidor = cs.fk_servidor
+	JOIN Eyes_On_Server.Componente c on c.id_componente = cm.fk_componente
+	JOIN Eyes_On_Server.Medida m on m.id_medida = cm.fk_medida
+    JOIN Eyes_On_Server.Servidor s on s.id_servidor = cs.fk_servidor
 ORDER BY Servidor;
 
 -- View Servidor DN141
