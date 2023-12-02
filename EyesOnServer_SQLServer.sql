@@ -125,6 +125,24 @@ CREATE TABLE Eyes_On_Server.dbo.Downtime
     CONSTRAINT FK_ServidorDowntime FOREIGN KEY(fk_servidor) REFERENCES Servidor(id_servidor)
 );
 
+CREATE TABLE percentQueda (
+    fk_empresa INT,
+    fk_servidor INT,
+    dataRegistro DATE,
+    percentDiario INT,
+    percentPrevisto INT,
+    FOREIGN KEY (fk_empresa) REFERENCES Empresa(id_empresa),
+    FOREIGN KEY (fk_servidor) REFERENCES Servidor(id_servidor)
+);
+
+CREATE TABLE E_Comerce (
+    id_feriado INT PRIMARY KEY IDENTITY(1,1), 
+    nome_ferado CHAR(50),
+    mes_feriado CHAR(50),
+    prioridade_feriado CHAR(50),
+    valor_prioridade INT
+);
+
 INSERT INTO Eyes_On_Server.dbo.Empresa ( nome_fantasia, cnpj, email, cep)
 VALUES
 ( 'Memory Analytics', '22.577.094/0001-07', 'MemoryAnalytics@outlook.com', '66026-362'),
@@ -135,10 +153,10 @@ INSERT INTO Eyes_On_Server.dbo.Usuario (fk_empresa, nome, cargo, email)
 VALUES
 (1, 'Isabela Noronha', 1, 'isabelaN@sptech.school'),
 (1, 'Felipe Guerrino', 0, 'felipeG@sptech.school'),
-(2, 'Davi Hil�rio', 1, 'daviH@sptech.school'),
+(2, 'Davi Hilário', 1, 'daviH@sptech.school'),
 (2, 'Gabriel Volpiani', 0, 'gabrielV@etec.gov.br'),
 (3, 'Paulo Macena', 1, 'pauloM@sptech.school'),
-(3, 'Ot�vio Walcovics', 0, 'otavioW@sptech.school'),
+(3, 'Otávio Walcovics', 0, 'otavioW@sptech.school'),
 (3, 'Rafael Ferreira', 1, 'rafael.ferreira.gerente@outlook.com'),
 (3, 'Claudio Sousa', 0, 'claudio.sousa@analista@outlook.com');
 
@@ -174,7 +192,7 @@ VALUES
 
 INSERT INTO Eyes_On_Server.dbo.Medida (nome_medida, simbolo_medida)
 VALUES
-('Temperatura', '�C'),
+('Temperatura', '°C'),
 ('PorcentagemUso', '%'),
 ('tamanhoGigaBytes', 'Gb'),
 ('Frequencia', 'Hz'),
@@ -187,8 +205,8 @@ VALUES
 INSERT INTO Eyes_On_Server.dbo.Componente_Medida (nome_componente_medida, tipo, fk_componente, fk_medida)
 VALUES
 ('Uso da CPU (%)', 'USO_PORCENTAGEM_CPU', 1, 2),
-('Frequ�ncia da CPU (Htz)', 'FREQUENCIA_CPU', 1, 4),
-('Uso da Mem�ria (%)', 'USO_MEMORIA_PORCENTAGEM', 2, 2),
+('Frequência da CPU (Htz)', 'FREQUENCIA_CPU', 1, 4),
+('Uso da Memória (%)', 'USO_MEMORIA_PORCENTAGEM', 2, 2),
 ('Uso do Disco (%)', 'USO_DISCO_PORCENTAGEM', 3, 2),
 ('Bytes Enviados', 'BYTES_ENVIADOS_REDE', 4, 6),
 ('Bytes Recebidos', 'BYTES_RECEBIDOS_REDE', 4, 7);
@@ -224,6 +242,69 @@ VALUES
 (6, 5),
 (6, 6);
 
+INSERT INTO percentQueda (fk_empresa, fk_servidor, dataRegistro, percentDiario, percentPrevisto) VALUES
+(3, 1, '2023-11-29', 5, 7),
+(3, 2, '2023-11-29', 6, 8),
+(3, 3, '2023-11-29', 4, 6),
+(3, 4, '2023-11-29', 7, 9),
+(3, 5, '2023-11-29', 8, 10),
+(3, 6, '2023-11-29', 6, 8),
+(3, 1, '2023-11-30', 10, 12),
+(3, 2, '2023-11-30', 8, 10),
+(3, 3, '2023-11-30', 3, 5),
+(3, 4, '2023-11-30', 4, 6),
+(3, 5, '2023-11-30', 2, 4),
+(3, 6, '2023-11-30', 6, 8);
+
+
+INSERT INTO E_Comerce (nome_ferado, mes_feriado, prioridade_feriado) VALUES
+('Ano novo', 'Janeiro', 'alta'),
+('Dia do cabeleleiro', 'Janeiro', 'baixa'),
+('Dia da Gula', 'Janeiro', 'média'),
+('Dia da saudade', 'Janeiro', 'baixa'),
+('Valentine''s day', 'Fevereiro', 'média'),
+('Dia do esportista', 'Fevereiro', 'baixa'),
+('Carnaval', 'Fevereiro', 'alta'),
+('Dia da mulher', 'Março', 'média'),
+('Dia do consumidor', 'Março', 'média'),
+('Início do outono', 'Março', 'baixa'),
+('Páscoa', 'Abril', 'alta'),
+('Dia do beijo', 'Abril', 'baixa'),
+('Dia do livro', 'Abril', 'média'),
+('Dia do frete grátis', 'Abril', 'média'),
+('Dia do trabalhador', 'Maio', 'baixa'),
+('Dia das mães', 'Maio', 'alta'),
+('Dia do orgulho nerd', 'Maio', 'baixa'),
+('Dia do hamburguer', 'Maio', 'baixa'),
+('Início do inverno', 'Junho', 'baixa'),
+('Dia de São João', 'Junho', 'alta'),
+('Dia do orgulho LGBT', 'Junho', 'baixa'),
+('Período de férias', 'Junho', 'alta'),
+('Dia da pizza', 'Julho', 'baixa'),
+('Dia do rock', 'Julho', 'baixa'),
+('Dia do futebol', 'Julho', 'baixa'),
+('Dia dos avós', 'Julho', 'baixa'),
+('Dia do amigo', 'Julho', 'baixa'),
+('Período de férias', 'Julho', 'alta'),
+('Dia dos pais', 'Agosto', 'alta'),
+('Dia dos solteiros', 'Agosto', 'baixa'),
+('Semana do Brasil', 'Setembro', 'baixa'),
+('Dia da cachaça', 'Setembro', 'média'),
+('Dia do cliente', 'Setembro', 'média'),
+('Início da primavera', 'Setembro', 'baixa'),
+('Dia dos animais', 'Outubro', 'baixa'),
+('Dia das crianças', 'Outubro', 'alta'),
+('Dia dos professores', 'Outubro', 'média'),
+('Dia da decoração', 'Outubro', 'baixa'),
+('Dia das Bruxas', 'Outubro', 'média'),
+('Dia do veganismo', 'Novembro', 'baixa'),
+('Black Friday', 'Novembro', 'alta'),
+('Cyber Day', 'Novembro', 'baixa'),
+('Início do Verão', 'Dezembro', 'baixa'),
+('Natal', 'Dezembro', 'alta'),
+('Réveillon', 'Dezembro', 'alta');
+
+
 SELECT * FROM Eyes_On_Server.dbo.Empresa;
 SELECT * FROM Eyes_On_Server.dbo.Usuario;
 SELECT * FROM Eyes_On_Server.dbo.Alertas;
@@ -236,6 +317,7 @@ SELECT * FROM Eyes_On_Server.dbo.Componente_Servidor;
 SELECT * FROM Eyes_On_Server.dbo.Processos;
 SELECT * FROM Eyes_On_Server.dbo.Registro;
 SELECT * FROM Eyes_On_Server.dbo.Downtime;
+SELECT * FROM Eyes_On_Server.dbo.E_Comerce;
 
 SELECT 
     u.nome,
@@ -380,6 +462,24 @@ WHERE
     s.id_servidor = 6; -- Considerando o servidor com ID 6, correspondente ao 'PA404'
 GO
 
+CREATE VIEW View_Alertas
+AS
+SELECT
+    a.id_alertas,
+    a.fk_empresa,
+    a.fk_servidor,
+    a.fk_componente,
+    a.titulo_alerta,
+    a.descricao_alerta,
+    a.data_hora_abertura,
+    a.tipoAlerta
+FROM Eyes_On_Server.dbo.Alertas a
+JOIN Eyes_On_Server.dbo.Componente_Medida cm ON a.fk_componente_medida = cm.id_componente_medida
+JOIN Eyes_On_Server.dbo.Componente c ON c.id_componente = cm.fk_componente
+ORDER BY a.id_alertas;
+
+GO
+
 CREATE OR ALTER VIEW view_riscos_servidores 
 AS
 SELECT
@@ -392,7 +492,7 @@ SELECT
     CASE
         WHEN COALESCE(total_alertas, 0) >= 300 THEN
             CASE
-                WHEN COALESCE(qtd_alertas_emergencia, 0) >= COALESCE(total_alertas, 0) * 0.75 THEN 'Risco M�ximo'
+                WHEN COALESCE(qtd_alertas_emergencia, 0) >= COALESCE(total_alertas, 0) * 0.75 THEN 'Risco Máximo'
                 WHEN COALESCE(qtd_alertas_emergencia, 0) >= COALESCE(total_alertas, 0) * 0.5 OR
                      COALESCE(qtd_alertas_perigo, 0) >= COALESCE(total_alertas, 0) * 0.75 THEN 'Risco Muito Alto'
                 WHEN COALESCE(qtd_alertas_perigo, 0) >= COALESCE(total_alertas, 0) * 0.5 OR
@@ -424,14 +524,34 @@ LEFT JOIN (
     SELECT
         fk_servidor,
         COUNT(id_alertas) AS total_alertas,
-        SUM(CASE WHEN tipoAlerta = 'Preven��o' THEN 1 ELSE 0 END) AS qtd_alertas_prevencao,
+        SUM(CASE WHEN tipoAlerta = 'Prevenção' THEN 1 ELSE 0 END) AS qtd_alertas_prevencao,
         SUM(CASE WHEN tipoAlerta = 'Perigo' THEN 1 ELSE 0 END) AS qtd_alertas_perigo,
-        SUM(CASE WHEN tipoAlerta = 'Emerg�ncia' THEN 1 ELSE 0 END) AS qtd_alertas_emergencia
+        SUM(CASE WHEN tipoAlerta = 'Emergência' THEN 1 ELSE 0 END) AS qtd_alertas_emergencia
     FROM Eyes_On_Server.dbo.Alertas
     WHERE CAST(data_hora_abertura AS DATE) = CAST(GETDATE() AS DATE)
     GROUP BY fk_servidor
 ) a ON s.id_servidor = a.fk_servidor;
 
+
+GO
+
+CREATE VIEW View_Tipo_Alerta
+AS
+SELECT
+    a.fk_empresa,
+    a.id_alertas,
+    a.fk_servidor,
+    s.local_servidor,
+    a.fk_componente,
+    a.data_hora_abertura,
+    a.tipoAlerta,
+    vs.nivel_de_risco,
+    CASE WHEN a.fk_componente = 1 THEN 1 ELSE 0 END AS alerta_cpu,
+    CASE WHEN a.fk_componente = 2 THEN 1 ELSE 0 END AS alerta_memoria,
+    CASE WHEN a.fk_componente = 3 THEN 1 ELSE 0 END AS alerta_disco
+FROM View_Alertas a
+JOIN Eyes_On_Server.dbo.Servidor s ON s.id_servidor = a.fk_servidor
+JOIN Eyes_On_Server.dbo.view_riscos_servidores vs ON vs.id_servidor = a.fk_servidor;
 
 GO
 
@@ -494,21 +614,20 @@ ORDER BY
 
 GO
 
-
-CREATE OR ALTER VIEW View_Downtime_Servidores
+CREATE VIEW View_PercentQueda_Servidores
 AS
 SELECT
     e.id_empresa,
     s.id_servidor,
     s.nome_servidor,
     s.local_servidor,
-    COALESCE(d.tempo_downtime, 0) AS tempo_downtime,
-    COALESCE(d.prejuizo, 0) AS prejuizo,
-    COALESCE(d.momento, CONVERT(DATETIME, '19000101', 112)) AS momento
-FROM
-    Eyes_On_Server.dbo.Servidor s
-    JOIN Eyes_On_Server.dbo.Empresa e ON e.id_empresa = s.fk_empresa
-    LEFT JOIN Eyes_On_Server.dbo.Downtime d ON s.id_servidor = d.fk_servidor;
+    COALESCE(p.percentDiario, 0) AS chanceDiaria,
+    COALESCE(p.percentPrevisto, 0) AS chancePrevisto,
+    p.dataRegistro
+FROM Eyes_On_Server.Servidor s
+LEFT JOIN Eyes_On_Server.percentQueda p ON s.id_servidor = p.fk_servidor
+JOIN Eyes_On_Server.Empresa e ON e.id_empresa = s.fk_empresa
+ORDER BY s.id_servidor, s.local_servidor, p.dataRegistro DESC;
 
 GO
 
@@ -526,17 +645,17 @@ AS
 BEGIN
     DECLARE @id_empresa INT;
 
-    -- Habilitar a inser��o expl�cita na coluna de identidade da tabela Empresa
+    -- Habilitar a inserção explícita na coluna de identidade da tabela Empresa
     SET IDENTITY_INSERT Eyes_On_Server.dbo.Empresa ON;
 
     -- Inserir explicitamente o ID e os outros valores
     INSERT INTO Eyes_On_Server.dbo.Empresa ( nome_fantasia, cnpj, email, cep)
     VALUES ( @nome_fantasia, @cnpj, @email_empresa, @cep);
 
-    -- Desativar a inser��o expl�cita na coluna de identidade da tabela Empresa
+    -- Desativar a inserção explícita na coluna de identidade da tabela Empresa
     SET IDENTITY_INSERT Eyes_On_Server.dbo.Empresa OFF;
 
-    -- Recuperar o �ltimo ID inserido na tabela Empresa
+    -- Recuperar o último ID inserido na tabela Empresa
     SELECT @id_empresa = SCOPE_IDENTITY();
 
    INSERT INTO Eyes_On_Server.dbo.Usuario (fk_empresa, nome, cargo, email)
@@ -568,7 +687,7 @@ PIVOT (
 GROUP BY Servidor, Momento
 ORDER BY Momento DESC;';
 
--- Executando a consulta din�mica
+-- Executando a consulta dinâmica
 
 EXEC sp_executesql @sql;
 
